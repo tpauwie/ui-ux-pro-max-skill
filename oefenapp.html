@@ -1,0 +1,3376 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oefenapp - Taal, Geheugen, Aandacht &amp; Rekenen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  /* Atkinson Hyperlegible — ontworpen voor mensen met visuele beperking/dyslexie */
+  :root {
+    --bg: #EEF3EE;
+    --panel: #FFFFFF;
+    --ink: #1B2B1B;
+    --muted: #4A5C4A;
+    --accent: #265E44;
+    --accent-hover: #1A4734;
+    --warn: #B83325;
+    --good: #1A5E33;
+    --border: #BCCFBC;
+    --shadow: 0 4px 16px rgba(0,0,0,0.07);
+    --radius: 16px;
+    --font-size-base: 20px;
+    --touch: 60px;
+  }
+
+  body.text-large  { --font-size-base: 24px; }
+  body.text-xlarge { --font-size-base: 30px; }
+
+  body.high-contrast {
+    --bg: #000000;
+    --panel: #FFFFFF;
+    --ink: #000000;
+    --muted: #222222;
+    --accent: #004DA8;
+    --accent-hover: #003280;
+    --border: #000000;
+    --warn: #CC0000;
+    --good: #005500;
+  }
+  body.high-contrast { background: #000; color: #fff; }
+  body.high-contrast .panel { color: #000; border: 3px solid #fff; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: var(--font-size-base);
+    line-height: 1.65;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    gap: 16px;
+    min-height: 68px;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25em;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .topbar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Knoppen — grote aanraakoppervlakken voor NAH-gebruikers */
+  button {
+    font-family: inherit;
+    font-size: 1em;
+    padding: 14px 22px;
+    min-height: var(--touch);
+    border: 2px solid var(--border);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.1s;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    touch-action: manipulation;
+    line-height: 1.3;
+  }
+  button:hover { background: #DDE8DD; border-color: var(--accent); }
+  button:active { transform: translateY(1px); }
+  button:focus-visible {
+    outline: 4px solid var(--accent);
+    outline-offset: 3px;
+  }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+  button.icon {
+    padding: 14px 16px;
+    font-size: 1.2em;
+    min-width: var(--touch);
+  }
+
+  button.back {
+    padding: 12px 18px;
+    font-size: 1em;
+    background: var(--panel);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  button.back:hover { background: var(--accent); color: white; }
+
+  .panel {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+  }
+
+  h1, h2, h3 {
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 0;
+    line-height: 1.3;
+  }
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1.05em; }
+
+  body.high-contrast h1,
+  body.high-contrast h2,
+  body.high-contrast h3 { color: var(--accent); }
+
+  /* Menu categorieën */
+  .categorie { margin-bottom: 30px; }
+  .categorie h2 {
+    margin: 0 0 14px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--accent);
+    display: inline-block;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .menu-card {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+    min-height: 128px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  .menu-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  .menu-card:focus-visible {
+    outline: 4px solid var(--accent);
+    outline-offset: 3px;
+    border-color: var(--accent);
+  }
+  .menu-card:active { transform: translateY(0); }
+  .menu-card .ico { font-size: 2.3em; margin-bottom: 6px; line-height: 1.2; }
+  .menu-card h3 { margin: 4px 0 3px; font-size: 0.95em; font-weight: 700; }
+  .menu-card p { color: var(--muted); margin: 0; font-size: 0.8em; line-height: 1.4; }
+
+  .exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .exercise-info {
+    display: flex;
+    gap: 20px;
+    font-size: 0.88em;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .exercise-info strong { color: var(--ink); font-weight: 700; }
+  body.high-contrast .exercise-info strong { color: #000; }
+
+  .picture-box {
+    text-align: center;
+    margin: 14px 0 18px;
+  }
+  .picture {
+    font-size: 8em;
+    line-height: 1;
+    padding: 22px;
+    display: inline-block;
+    background: #F3F7F3;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    min-width: 180px;
+  }
+  body.high-contrast .picture { background: #fff; }
+
+  /* Antwoord-opties — grote vlakken voor NAH */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .options.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .options.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .option-btn {
+    padding: 20px 14px;
+    font-size: 1.1em;
+    font-weight: 700;
+    font-family: inherit;
+    text-align: center;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    min-height: 78px;
+    touch-action: manipulation;
+    line-height: 1.3;
+  }
+  .option-btn:hover { background: #DDE8DD; border-color: var(--accent); }
+  .option-btn:focus-visible {
+    outline: 4px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .option-btn.correct {
+    background: #C2E8C5;
+    border-color: var(--good);
+    border-width: 3px;
+    color: #0A3D18;
+  }
+  .option-btn.wrong {
+    background: #FAD0CC;
+    border-color: var(--warn);
+    border-width: 3px;
+    color: #6A140B;
+  }
+  .option-btn.disabled { pointer-events: none; opacity: 0.6; }
+
+  .type-input {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2em;
+    font-family: inherit;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    margin-bottom: 16px;
+    background: var(--panel);
+    color: var(--ink);
+    min-height: var(--touch);
+  }
+  .type-input:focus {
+    outline: 4px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+  .type-input.small {
+    width: 80px;
+    display: inline-block;
+    margin: 0 4px;
+    font-size: 1.4em;
+  }
+
+  /* Geheugenspel */
+  .memory-grid {
+    display: grid;
+    gap: 10px;
+    margin: 18px auto;
+    max-width: 660px;
+  }
+  .memory-card {
+    aspect-ratio: 1;
+    background: var(--accent);
+    border: 2px solid var(--accent-hover);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 2.3em;
+    color: white;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .memory-card.flipped {
+    background: #F3F7F3;
+    color: var(--ink);
+    border-color: var(--border);
+  }
+  .memory-card.matched {
+    background: #C2E8C5;
+    border-color: var(--good);
+    border-width: 3px;
+    color: var(--ink);
+    cursor: default;
+  }
+
+  /* Aandacht-raster */
+  .attention-grid {
+    display: grid;
+    gap: 8px;
+    background: #F3F7F3;
+    padding: 14px;
+    border-radius: var(--radius);
+    margin: 14px 0;
+  }
+  .attention-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.6em;
+    user-select: none;
+    transition: background 0.1s, border-color 0.1s;
+    touch-action: manipulation;
+  }
+  .attention-cell:hover { background: #DDE8DD; border-color: var(--accent); }
+  .attention-cell.marked-correct {
+    background: #C2E8C5;
+    border-color: var(--good);
+    border-width: 3px;
+  }
+  .attention-cell.marked-wrong {
+    background: #FAD0CC;
+    border-color: var(--warn);
+    border-width: 3px;
+  }
+
+  .target-display {
+    text-align: center;
+    margin: 12px 0;
+    padding: 14px 18px;
+    background: #F3F7F3;
+    border-radius: var(--radius);
+    font-size: 1.05em;
+    font-weight: 700;
+    border: 2px solid var(--border);
+  }
+  .target-display .symbol { font-size: 2em; vertical-align: middle; margin: 0 6px; }
+
+  .sentence-box {
+    font-size: 1.2em;
+    line-height: 1.9;
+    text-align: center;
+    padding: 26px 22px;
+    background: #F3F7F3;
+    border-radius: var(--radius);
+    margin: 14px 0;
+    border: 2px solid var(--border);
+  }
+  .blank {
+    display: inline-block;
+    min-width: 110px;
+    border-bottom: 3px solid var(--accent);
+    margin: 0 6px;
+    padding: 0 8px;
+  }
+  .word-with-blank {
+    font-size: 2.1em;
+    letter-spacing: 0.06em;
+    margin: 18px 0;
+    text-align: center;
+    font-weight: 700;
+  }
+  .word-with-blank .blank-letter {
+    display: inline-block;
+    min-width: 1em;
+    border-bottom: 4px solid var(--accent);
+    margin: 0 3px;
+    color: var(--accent);
+  }
+
+  /* Geld-oefening */
+  .geld-doel {
+    text-align: center;
+    margin: 14px 0;
+    padding: 22px;
+    background: #F3F7F3;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    font-size: 1.1em;
+    font-weight: 700;
+  }
+  .geld-doel .bedrag {
+    font-size: 2.3em;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-top: 4px;
+  }
+  .geld-betaald {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 1.1em;
+    font-weight: 700;
+  }
+  .geld-betaald .bedrag {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  .geld-mandje {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    min-height: 78px;
+    padding: 12px;
+    background: #F3F7F3;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    margin: 12px 0;
+    align-items: center;
+  }
+  .geld-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .geld-item {
+    cursor: pointer;
+    text-align: center;
+    padding: 14px 8px;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    user-select: none;
+    touch-action: manipulation;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .geld-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .geld-item:focus-visible {
+    outline: 4px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .geld-item.briefje {
+    background: linear-gradient(135deg, #CCE8CC 0%, #B4DCB4 100%);
+  }
+  .geld-item.munt {
+    background: linear-gradient(135deg, #F5D87A 0%, #D4A82E 100%);
+  }
+  .geld-item .waarde {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .geld-item .label { font-size: 0.76em; color: #444; margin-top: 2px; }
+  .geld-mandje .geld-item { padding: 6px 10px; min-height: 48px; }
+  .geld-mandje .geld-item .waarde { font-size: 0.92em; }
+  .geld-mandje .geld-item .label { display: none; }
+
+  /* Feedback — groot en duidelijk voor NAH */
+  .feedback {
+    text-align: center;
+    padding: 20px 22px;
+    border-radius: var(--radius);
+    margin-top: 18px;
+    font-size: 1.2em;
+    font-weight: 700;
+    border: 3px solid transparent;
+    line-height: 1.4;
+  }
+  .feedback.good {
+    background: #C2E8C5;
+    color: #0A3D18;
+    border-color: var(--good);
+  }
+  .feedback.bad {
+    background: #FAD0CC;
+    color: #6A140B;
+    border-color: var(--warn);
+  }
+  body.high-contrast .feedback.good { background: #FFEB3B; color: #000; border-color: #000; }
+  body.high-contrast .feedback.bad  { background: #FF5252; color: #000; border-color: #000; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 30px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: var(--ink);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  body.high-contrast .modal { border: 3px solid #fff; }
+
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+  .setting-row:last-of-type { border-bottom: none; }
+  .setting-label { flex: 1; }
+  .setting-label small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.82em;
+    margin-top: 3px;
+  }
+  .setting-control select,
+  .setting-control input[type="number"] {
+    font-family: inherit;
+    font-size: 1em;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--ink);
+    min-width: 140px;
+    min-height: 48px;
+  }
+  .setting-control select:focus,
+  .setting-control input:focus {
+    outline: 4px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+  .setting-control input[type="number"] { width: 90px; min-width: auto; }
+
+  /* Toggle-schakelaar */
+  .switch { position: relative; display: inline-block; width: 58px; height: 32px; }
+  .switch input { display: none; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #AABCAA;
+    border-radius: 32px;
+    transition: background 0.2s;
+  }
+  .slider:before {
+    content: "";
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  input:checked + .slider { background: var(--accent); }
+  input:checked + .slider:before { transform: translateX(26px); }
+
+  /* Voortgangsbalk — dikker voor zichtbaarheid */
+  .progress-bar {
+    height: 12px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.35s ease;
+    border-radius: 6px;
+  }
+
+  /* Resultaten */
+  .results-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 22px 0;
+  }
+  .stat-card {
+    background: #F3F7F3;
+    padding: 22px 14px;
+    border-radius: var(--radius);
+    text-align: center;
+    border: 2px solid var(--border);
+  }
+  .stat-card .value {
+    font-size: 2.3em;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-card .label { color: var(--muted); margin-top: 6px; font-size: 0.88em; }
+
+  .pin-input {
+    font-size: 1.8em;
+    text-align: center;
+    letter-spacing: 0.4em;
+    padding: 14px;
+    width: 200px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    min-height: var(--touch);
+  }
+  .pin-input:focus {
+    outline: 4px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+
+  .timer {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--warn);
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 0.86em;
+    margin-top: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .word-list {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+    font-size: 1.25em;
+  }
+  .word-list .word {
+    padding: 12px 20px;
+    background: #F3F7F3;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    font-weight: 700;
+  }
+
+  .doel-woord {
+    text-align: center;
+    margin: 14px 0;
+    padding: 22px;
+    background: #F3F7F3;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+  }
+  .doel-woord .label { font-size: 0.86em; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+  .doel-woord .woord {
+    font-size: 2.3em;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    .app { padding: 10px; }
+    .options { grid-template-columns: 1fr; }
+    .options.cols-3, .options.cols-4 { grid-template-columns: repeat(2, 1fr); }
+    .results-stats { grid-template-columns: 1fr; }
+    .exercise-info { flex-direction: column; gap: 5px; }
+    .picture { font-size: 5.5em; }
+    .word-with-blank { font-size: 1.6em; }
+    .panel { padding: 18px 14px; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* ============================================================
+   OEFEN-APP v2 voor mensen met afasie / cognitieve problemen
+   ============================================================ */
+
+// ====== DATA ======
+const WOORD_DATA = {
+  1: [
+    { plaatje: "🍎", woord: "appel", afleiders: ["peer", "banaan", "druif"] },
+    { plaatje: "🐕", woord: "hond", afleiders: ["kat", "muis", "vis"] },
+    { plaatje: "🚗", woord: "auto", afleiders: ["fiets", "bus", "trein"] },
+    { plaatje: "🏠", woord: "huis", afleiders: ["boom", "tuin", "weg"] },
+    { plaatje: "☀️", woord: "zon", afleiders: ["maan", "ster", "wolk"] },
+    { plaatje: "🌳", woord: "boom", afleiders: ["bloem", "gras", "blad"] },
+    { plaatje: "📚", woord: "boek", afleiders: ["krant", "blad", "pen"] },
+    { plaatje: "🪑", woord: "stoel", afleiders: ["tafel", "bed", "kast"] },
+    { plaatje: "🐟", woord: "vis", afleiders: ["vogel", "kat", "hond"] },
+    { plaatje: "🥛", woord: "melk", afleiders: ["water", "thee", "sap"] },
+    { plaatje: "🌙", woord: "maan", afleiders: ["zon", "ster", "wolk"] },
+    { plaatje: "🚲", woord: "fiets", afleiders: ["auto", "bus", "step"] },
+  ],
+  2: [
+    { plaatje: "🎸", woord: "gitaar", afleiders: ["piano", "viool", "drum"] },
+    { plaatje: "🍞", woord: "brood", afleiders: ["koek", "taart", "wafel"] },
+    { plaatje: "🧥", woord: "jas", afleiders: ["trui", "broek", "hemd"] },
+    { plaatje: "🌹", woord: "roos", afleiders: ["tulp", "lelie", "viool"] },
+    { plaatje: "🛏️", woord: "bed", afleiders: ["bank", "stoel", "kast"] },
+    { plaatje: "🦋", woord: "vlinder", afleiders: ["vogel", "bij", "kever"] },
+    { plaatje: "⛵", woord: "boot", afleiders: ["vliegtuig", "trein", "auto"] },
+    { plaatje: "🎁", woord: "cadeau", afleiders: ["doos", "pakje", "tas"] },
+    { plaatje: "🔑", woord: "sleutel", afleiders: ["slot", "haak", "ring"] },
+    { plaatje: "🍓", woord: "aardbei", afleiders: ["framboos", "kers", "bes"] },
+    { plaatje: "🥕", woord: "wortel", afleiders: ["aardappel", "ui", "biet"] },
+    { plaatje: "🎈", woord: "ballon", afleiders: ["bal", "wiel", "schijf"] },
+  ],
+  3: [
+    { plaatje: "🦒", woord: "giraf", afleiders: ["zebra", "olifant", "kameel"] },
+    { plaatje: "🎺", woord: "trompet", afleiders: ["saxofoon", "klarinet", "fluit"] },
+    { plaatje: "🥦", woord: "broccoli", afleiders: ["bloemkool", "spruitjes", "sla"] },
+    { plaatje: "🦔", woord: "egel", afleiders: ["mol", "wezel", "marter"] },
+    { plaatje: "🏛️", woord: "museum", afleiders: ["bibliotheek", "gemeentehuis", "kerk"] },
+    { plaatje: "🪜", woord: "ladder", afleiders: ["trap", "stelling", "kruk"] },
+    { plaatje: "🦉", woord: "uil", afleiders: ["havik", "kraai", "raaf"] },
+    { plaatje: "🎻", woord: "viool", afleiders: ["cello", "harp", "altviool"] },
+    { plaatje: "🌾", woord: "graan", afleiders: ["gras", "riet", "stro"] },
+    { plaatje: "🧭", woord: "kompas", afleiders: ["barometer", "thermometer", "horloge"] },
+    { plaatje: "🦩", woord: "flamingo", afleiders: ["pelikaan", "reiger", "ooievaar"] },
+    { plaatje: "🎨", woord: "palet", afleiders: ["schilderij", "kwast", "ezel"] },
+  ]
+};
+
+// Zinnen aanvullen - 4 opties, slechts 1 past echt
+// Afleiders zijn bewust absurd - andere woordsoorten of volstrekt niet passende woorden
+const ZINNEN_DATA = {
+  1: [
+    { zin: "De ___ schijnt aan de hemel.", antwoord: "zon", opties: ["zon", "lepel", "fiets", "schoen"] },
+    { zin: "Ik drink een kopje ___.", antwoord: "koffie", opties: ["koffie", "stoel", "regen", "ladder"] },
+    { zin: "De ___ blaft en kwispelt met zijn staart.", antwoord: "hond", opties: ["hond", "tafel", "pen", "deur"] },
+    { zin: "We eten soep met een ___.", antwoord: "lepel", opties: ["lepel", "wolk", "boom", "fiets"] },
+    { zin: "Ik poets mijn ___ twee keer per dag.", antwoord: "tanden", opties: ["tanden", "auto", "boek", "raam"] },
+    { zin: "Ik slaap elke nacht in mijn ___.", antwoord: "bed", opties: ["bed", "straat", "appel", "wolk"] },
+    { zin: "De ___ rijdt over de weg.", antwoord: "auto", opties: ["auto", "vis", "bloem", "kaas"] },
+    { zin: "Ik lees elke avond een ___.", antwoord: "boek", opties: ["boek", "emmer", "zand", "muur"] },
+    { zin: "De ___ vliegen van boom naar boom.", antwoord: "vogels", opties: ["vogels", "schoenen", "borden", "tafels"] },
+    { zin: "Ik was mijn handen met water en ___.", antwoord: "zeep", opties: ["zeep", "melk", "brood", "verf"] },
+    { zin: "Het kind speelt buiten op het ___.", antwoord: "plein", opties: ["plein", "koelkast", "schaar", "dak"] },
+    { zin: "De kat drinkt graag ___.", antwoord: "melk", opties: ["melk", "zand", "papier", "steen"] },
+  ],
+  2: [
+    { zin: "De bakker bakt elke ochtend vers ___.", antwoord: "brood", opties: ["brood", "stenen", "fietsen", "gordijnen"] },
+    { zin: "Als het regent, pak ik een ___.", antwoord: "paraplu", opties: ["paraplu", "koelkast", "tapijt", "schroef"] },
+    { zin: "De kinderen bouwen een zandkasteel op het ___.", antwoord: "strand", opties: ["strand", "koelkast", "horloge", "knoop"] },
+    { zin: "Ik schrijf een brief met een ___.", antwoord: "pen", opties: ["pen", "hamer", "emmer", "schep"] },
+    { zin: "De trein stopt op het ___.", antwoord: "station", opties: ["station", "dak", "speelveld", "zwembad"] },
+    { zin: "De vogel bouwt een ___ voor haar eieren.", antwoord: "nest", opties: ["nest", "kelder", "garage", "doos"] },
+    { zin: "De dokter onderzoekt de patiënt in het ___.", antwoord: "ziekenhuis", opties: ["ziekenhuis", "zwembad", "winkelcentrum", "bos"] },
+    { zin: "Ik koop verse groenten op de ___.", antwoord: "markt", opties: ["markt", "ladder", "wiel", "schaal"] },
+    { zin: "De brandweer blust het vuur met ___.", antwoord: "water", opties: ["water", "papier", "klei", "wol"] },
+    { zin: "In de winter draag ik een warme ___.", antwoord: "jas", opties: ["jas", "bril", "schaar", "bloem"] },
+    { zin: "De kok bereidt het eten in de ___.", antwoord: "keuken", opties: ["keuken", "kelder", "bibliotheek", "garage"] },
+    { zin: "Op mijn verjaardag krijg ik een ___ met kaarsjes.", antwoord: "taart", opties: ["taart", "hark", "lat", "tegel"] },
+  ],
+  3: [
+    { zin: "De advocaat verdedigt zijn cliënt voor de ___.", antwoord: "rechter", opties: ["rechter", "koelkast", "gordijn", "tandenborstel"] },
+    { zin: "Het orkest speelt een mooie ___ van Beethoven.", antwoord: "symfonie", opties: ["symfonie", "schroef", "tegelpad", "leuning"] },
+    { zin: "De archeoloog groef een oud ___ op uit de grond.", antwoord: "skelet", opties: ["skelet", "recept", "fietsbel", "gordijn"] },
+    { zin: "Door de dikke mist was het ___ op de weg gevaarlijk.", antwoord: "zicht", opties: ["zicht", "tapijt", "lade", "hanger"] },
+    { zin: "Het regenwater ___ langs de dakgoot naar beneden.", antwoord: "stroomt", opties: ["stroomt", "bakt", "naait", "schildert"] },
+    { zin: "De uitvoering van het toneelstuk was werkelijk ___.", antwoord: "indrukwekkend", opties: ["indrukwekkend", "vierkant", "zout", "droog"] },
+    { zin: "De wetenschapper deed jarenlang ___ naar het klimaat.", antwoord: "onderzoek", opties: ["onderzoek", "boodschappen", "tapijt", "wasgoed"] },
+    { zin: "Na lang overleg nam de minister een moeilijke ___.", antwoord: "beslissing", opties: ["beslissing", "boterham", "fietspad", "wasknijper"] },
+    { zin: "De klimmer bereikte na uren zweten de ___ van de berg.", antwoord: "top", opties: ["top", "soep", "spijker", "stof"] },
+    { zin: "In de winter ligt er vaak een dik pak ___ op de velden.", antwoord: "sneeuw", opties: ["sneeuw", "verf", "suiker", "zand"] },
+    { zin: "De componist schreef zijn mooiste ___ op hoge leeftijd.", antwoord: "melodie", opties: ["melodie", "rekening", "schroef", "ketting"] },
+    { zin: "Het publiek applaudisseerde na het ___ van de solist.", antwoord: "optreden", opties: ["optreden", "ontbijt", "gereedschap", "medicijn"] },
+  ]
+};
+
+// Letter kiezen / invullen / benoemen (plaatje + woord met gat)
+const LETTER_DATA = {
+  1: [
+    { plaatje: "🍎", woord: "appel", gat: 1 }, // a_pel
+    { plaatje: "🐕", woord: "hond", gat: 1 },
+    { plaatje: "🚗", woord: "auto", gat: 2 },
+    { plaatje: "🏠", woord: "huis", gat: 1 },
+    { plaatje: "☀️", woord: "zon", gat: 1 },
+    { plaatje: "🌳", woord: "boom", gat: 2 },
+    { plaatje: "🐟", woord: "vis", gat: 1 },
+    { plaatje: "🥛", woord: "melk", gat: 2 },
+    { plaatje: "📚", woord: "boek", gat: 1 },
+    { plaatje: "🌙", woord: "maan", gat: 1 },
+  ],
+  2: [
+    { plaatje: "🎸", woord: "gitaar", gat: 2 },
+    { plaatje: "🍞", woord: "brood", gat: 2 },
+    { plaatje: "🌹", woord: "roos", gat: 1 },
+    { plaatje: "🛏️", woord: "bed", gat: 1 },
+    { plaatje: "🦋", woord: "vlinder", gat: 3 },
+    { plaatje: "⛵", woord: "boot", gat: 2 },
+    { plaatje: "🔑", woord: "sleutel", gat: 3 },
+    { plaatje: "🥕", woord: "wortel", gat: 1 },
+    { plaatje: "🎈", woord: "ballon", gat: 2 },
+    { plaatje: "🚲", woord: "fiets", gat: 1 },
+  ],
+  3: [
+    { plaatje: "🦒", woord: "giraf", gat: 3 },
+    { plaatje: "🎺", woord: "trompet", gat: 4 },
+    { plaatje: "🥦", woord: "broccoli", gat: 5 },
+    { plaatje: "🦔", woord: "egel", gat: 1 },
+    { plaatje: "🪜", woord: "ladder", gat: 3 },
+    { plaatje: "🦉", woord: "uil", gat: 1 },
+    { plaatje: "🎻", woord: "viool", gat: 2 },
+    { plaatje: "🧭", woord: "kompas", gat: 4 },
+    { plaatje: "🦩", woord: "flamingo", gat: 4 },
+    { plaatje: "🏛️", woord: "museum", gat: 3 },
+  ]
+};
+
+// Lettergreep oefening - laatste lettergreep ontbreekt
+const LETTERGREEP_DATA = {
+  1: [
+    { woord: "appel", begin: "ap", eind: "pel", afleiders: ["per", "der", "ber"] },
+    { woord: "tafel", begin: "ta", eind: "fel", afleiders: ["pen", "ker", "lijn"] },
+    { woord: "stoel", begin: "st", eind: "oel", afleiders: ["uin", "and", "eep"] },
+    { woord: "huisje", begin: "hui", eind: "sje", afleiders: ["tje", "kje", "pje"] },
+    { woord: "hondje", begin: "hond", eind: "je", afleiders: ["tje", "kje", "sje"] },
+    { woord: "katje", begin: "kat", eind: "je", afleiders: ["tje", "kje", "sje"] },
+    { woord: "fiets", begin: "fie", eind: "ts", afleiders: ["nd", "rk", "ld"] },
+    { woord: "boom", begin: "bo", eind: "om", afleiders: ["em", "im", "um"] },
+  ],
+  2: [
+    { woord: "wandelen", begin: "wan", eind: "delen", afleiders: ["telen", "kelen", "selen"] },
+    { woord: "lopen", begin: "lo", eind: "pen", afleiders: ["ten", "ken", "sen"] },
+    { woord: "vlinder", begin: "vlin", eind: "der", afleiders: ["ter", "ker", "ner"] },
+    { woord: "regenen", begin: "re", eind: "genen", afleiders: ["denen", "kenen", "tenen"] },
+    { woord: "schilder", begin: "schil", eind: "der", afleiders: ["ter", "ner", "ler"] },
+    { woord: "voetbal", begin: "voet", eind: "bal", afleiders: ["pal", "tal", "kal"] },
+    { woord: "kanaal", begin: "ka", eind: "naal", afleiders: ["raal", "paal", "taal"] },
+    { woord: "vakantie", begin: "va", eind: "kantie", afleiders: ["mantie", "pantie", "lantie"] },
+  ],
+  3: [
+    { woord: "bibliotheek", begin: "biblio", eind: "theek", afleiders: ["sfeer", "graaf", "logie"] },
+    { woord: "telefoon", begin: "tele", eind: "foon", afleiders: ["visie", "graaf", "scoop"] },
+    { woord: "fotograaf", begin: "foto", eind: "graaf", afleiders: ["scoop", "foon", "logie"] },
+    { woord: "astronaut", begin: "astro", eind: "naut", afleiders: ["loog", "noom", "fysica"] },
+    { woord: "democratie", begin: "demo", eind: "cratie", afleiders: ["grafie", "logie", "nomie"] },
+    { woord: "biologie", begin: "bio", eind: "logie", afleiders: ["grafie", "nomie", "scopie"] },
+    { woord: "filosofie", begin: "filo", eind: "sofie", afleiders: ["logie", "grafie", "nomie"] },
+    { woord: "geografie", begin: "geo", eind: "grafie", afleiders: ["logie", "nomie", "metrie"] },
+  ]
+};
+
+// Synoniemen - 4 opties, 1 is synoniem
+const SYNONIEM_DATA = {
+  1: [
+    { woord: "blij", antwoord: "vrolijk", afleiders: ["boos", "moe", "ziek"] },
+    { woord: "groot", antwoord: "fors", afleiders: ["klein", "smal", "kort"] },
+    { woord: "snel", antwoord: "vlug", afleiders: ["traag", "zwaar", "stil"] },
+    { woord: "mooi", antwoord: "fraai", afleiders: ["lelijk", "vies", "oud"] },
+    { woord: "huis", antwoord: "woning", afleiders: ["tuin", "weg", "auto"] },
+    { woord: "auto", antwoord: "wagen", afleiders: ["fiets", "boot", "bus"] },
+    { woord: "klein", antwoord: "tenger", afleiders: ["groot", "dik", "lang"] },
+    { woord: "boos", antwoord: "kwaad", afleiders: ["blij", "moe", "ziek"] },
+    { woord: "vies", antwoord: "smerig", afleiders: ["schoon", "leeg", "vol"] },
+    { woord: "oud", antwoord: "bejaard", afleiders: ["jong", "nieuw", "fris"] },
+  ],
+  2: [
+    { woord: "rustig", antwoord: "kalm", afleiders: ["druk", "wild", "snel"] },
+    { woord: "moe", antwoord: "vermoeid", afleiders: ["uitgerust", "wakker", "actief"] },
+    { woord: "praten", antwoord: "spreken", afleiders: ["zwijgen", "denken", "lopen"] },
+    { woord: "kijken", antwoord: "staren", afleiders: ["horen", "ruiken", "voelen"] },
+    { woord: "lekker", antwoord: "smakelijk", afleiders: ["vies", "zout", "koud"] },
+    { woord: "moeilijk", antwoord: "lastig", afleiders: ["makkelijk", "kort", "licht"] },
+    { woord: "fout", antwoord: "verkeerd", afleiders: ["goed", "juist", "waar"] },
+    { woord: "begin", antwoord: "start", afleiders: ["einde", "midden", "stop"] },
+    { woord: "vraag", antwoord: "verzoek", afleiders: ["antwoord", "stilte", "lied"] },
+    { woord: "winkel", antwoord: "zaak", afleiders: ["huis", "tuin", "weg"] },
+  ],
+  3: [
+    { woord: "verwerven", antwoord: "verkrijgen", afleiders: ["verliezen", "weggooien", "vergeten"] },
+    { woord: "ingewikkeld", antwoord: "complex", afleiders: ["simpel", "kort", "klein"] },
+    { woord: "verbergen", antwoord: "verstoppen", afleiders: ["tonen", "wijzen", "uitleggen"] },
+    { woord: "vergankelijk", antwoord: "tijdelijk", afleiders: ["eeuwig", "stevig", "vast"] },
+    { woord: "monumentaal", antwoord: "indrukwekkend", afleiders: ["onbeduidend", "klein", "saai"] },
+    { woord: "alledaags", antwoord: "gewoon", afleiders: ["bijzonder", "uniek", "zeldzaam"] },
+    { woord: "doorzichtig", antwoord: "transparant", afleiders: ["ondoorzichtig", "donker", "dik"] },
+    { woord: "scherpzinnig", antwoord: "slim", afleiders: ["dom", "traag", "lui"] },
+    { woord: "bevallig", antwoord: "elegant", afleiders: ["lomp", "stug", "ruw"] },
+    { woord: "rechtschapen", antwoord: "eerlijk", afleiders: ["oneerlijk", "vals", "stiekem"] },
+  ]
+};
+
+// Wat past - semantisch verwant
+const WATPAST_DATA = {
+  1: [
+    { woord: "hond", antwoord: "kat", afleiders: ["auto", "tafel", "boek"] },
+    { woord: "appel", antwoord: "peer", afleiders: ["stoel", "fiets", "lamp"] },
+    { woord: "rood", antwoord: "blauw", afleiders: ["groot", "snel", "lekker"] },
+    { woord: "mes", antwoord: "vork", afleiders: ["wolk", "boom", "schoen"] },
+    { woord: "zomer", antwoord: "winter", afleiders: ["huis", "auto", "boek"] },
+    { woord: "kop", antwoord: "schotel", afleiders: ["regen", "wiel", "muur"] },
+    { woord: "trein", antwoord: "spoor", afleiders: ["soep", "lamp", "kast"] },
+    { woord: "vis", antwoord: "water", afleiders: ["boom", "huis", "auto"] },
+    { woord: "schoen", antwoord: "sok", afleiders: ["bord", "lamp", "deur"] },
+    { woord: "pen", antwoord: "papier", afleiders: ["fiets", "soep", "vogel"] },
+  ],
+  2: [
+    { woord: "dokter", antwoord: "ziekenhuis", afleiders: ["bakkerij", "garage", "school"] },
+    { woord: "boer", antwoord: "tractor", afleiders: ["computer", "telefoon", "boek"] },
+    { woord: "vogel", antwoord: "nest", afleiders: ["hok", "stal", "garage"] },
+    { woord: "naald", antwoord: "draad", afleiders: ["wiel", "lepel", "deur"] },
+    { woord: "kapper", antwoord: "haar", afleiders: ["voet", "oog", "neus"] },
+    { woord: "schoen", antwoord: "veter", afleiders: ["knoop", "ritssluiting", "haak"] },
+    { woord: "regen", antwoord: "paraplu", afleiders: ["zonnebril", "muts", "sjaal"] },
+    { woord: "schaar", antwoord: "knippen", afleiders: ["schrijven", "lezen", "lopen"] },
+    { woord: "bril", antwoord: "ogen", afleiders: ["oren", "neus", "mond"] },
+    { woord: "fiets", antwoord: "pedaal", afleiders: ["stuur van auto", "roer", "wiel van boot"] },
+  ],
+  3: [
+    { woord: "rechter", antwoord: "rechtbank", afleiders: ["school", "kerk", "winkel"] },
+    { woord: "violist", antwoord: "orkest", afleiders: ["bakkerij", "ziekenhuis", "stadion"] },
+    { woord: "anker", antwoord: "schip", afleiders: ["vliegtuig", "trein", "auto"] },
+    { woord: "thermometer", antwoord: "temperatuur", afleiders: ["lengte", "gewicht", "geluid"] },
+    { woord: "kompas", antwoord: "richting", afleiders: ["tijd", "gewicht", "snelheid"] },
+    { woord: "telescoop", antwoord: "sterren", afleiders: ["bacteriën", "wormen", "mieren"] },
+    { woord: "microscoop", antwoord: "bacteriën", afleiders: ["sterren", "bergen", "wolken"] },
+    { woord: "barometer", antwoord: "luchtdruk", afleiders: ["lengte", "geluid", "afstand"] },
+    { woord: "metronoom", antwoord: "ritme", afleiders: ["temperatuur", "afstand", "gewicht"] },
+    { woord: "kompasnaald", antwoord: "noorden", afleiders: ["zuiden", "midden", "boven"] },
+  ]
+};
+
+// Wat past niet - 4 woorden, 1 hoort er niet bij
+const WATPASTNIET_DATA = {
+  1: [
+    { woorden: ["appel", "peer", "banaan", "stoel"], buiten: "stoel" },
+    { woorden: ["hond", "kat", "konijn", "auto"], buiten: "auto" },
+    { woorden: ["rood", "blauw", "groen", "snel"], buiten: "snel" },
+    { woorden: ["tafel", "stoel", "kast", "vogel"], buiten: "vogel" },
+    { woorden: ["mes", "vork", "lepel", "boek"], buiten: "boek" },
+    { woorden: ["auto", "fiets", "trein", "appel"], buiten: "appel" },
+    { woorden: ["zon", "maan", "ster", "stoel"], buiten: "stoel" },
+    { woorden: ["broek", "trui", "jas", "lepel"], buiten: "lepel" },
+    { woorden: ["een", "twee", "drie", "boom"], buiten: "boom" },
+    { woorden: ["hoofd", "arm", "been", "auto"], buiten: "auto" },
+  ],
+  2: [
+    { woorden: ["roos", "tulp", "lelie", "eik"], buiten: "eik" },
+    { woorden: ["hamer", "schroevendraaier", "tang", "lepel"], buiten: "lepel" },
+    { woorden: ["voetbal", "tennis", "judo", "lezen"], buiten: "lezen" },
+    { woorden: ["dokter", "verpleger", "tandarts", "bakker"], buiten: "bakker" },
+    { woorden: ["piano", "gitaar", "viool", "verfkwast"], buiten: "verfkwast" },
+    { woorden: ["lente", "zomer", "herfst", "ochtend"], buiten: "ochtend" },
+    { woorden: ["paard", "koe", "varken", "haai"], buiten: "haai" },
+    { woorden: ["zwemmen", "duiken", "snorkelen", "fietsen"], buiten: "fietsen" },
+    { woorden: ["boter", "kaas", "melk", "appel"], buiten: "appel" },
+    { woorden: ["schaar", "lijm", "papier", "frituurpan"], buiten: "frituurpan" },
+  ],
+  3: [
+    { woorden: ["nostalgie", "weemoed", "melancholie", "vreugde"], buiten: "vreugde" },
+    { woorden: ["sonate", "symfonie", "concert", "roman"], buiten: "roman" },
+    { woorden: ["kubisme", "impressionisme", "barok", "vleeswaren"], buiten: "vleeswaren" },
+    { woorden: ["democratie", "monarchie", "republiek", "vegetarisch"], buiten: "vegetarisch" },
+    { woorden: ["zuurstof", "stikstof", "waterstof", "graniet"], buiten: "graniet" },
+    { woorden: ["aorta", "slagader", "ader", "wervel"], buiten: "wervel" },
+    { woorden: ["sopraan", "alt", "tenor", "viool"], buiten: "viool" },
+    { woorden: ["meridiaan", "evenaar", "breedtegraad", "nestkast"], buiten: "nestkast" },
+    { woorden: ["filosofie", "wijsbegeerte", "logica", "tandheelkunde"], buiten: "tandheelkunde" },
+    { woorden: ["fluit", "klarinet", "hobo", "trommel"], buiten: "trommel" },
+  ]
+};
+
+// Geld oefening - bedragen in euro's
+const GELD_DATA = {
+  1: [3, 5, 7, 8, 10, 12, 15, 20, 25, 30],
+  2: [11, 13, 17, 22, 27, 35, 42, 55, 65, 80],
+  3: [3.50, 7.25, 12.75, 18.50, 24.30, 33.65, 47.85, 58.40, 76.20, 99.95]
+};
+
+// Beschikbare biljetten en munten (in euro)
+const GELD_DENOMINATIES = [
+  { waarde: 50, label: "€50", type: "briefje" },
+  { waarde: 20, label: "€20", type: "briefje" },
+  { waarde: 10, label: "€10", type: "briefje" },
+  { waarde: 5, label: "€5", type: "briefje" },
+  { waarde: 2, label: "€2", type: "munt" },
+  { waarde: 1, label: "€1", type: "munt" },
+  { waarde: 0.5, label: "50 cent", type: "munt" },
+  { waarde: 0.2, label: "20 cent", type: "munt" },
+  { waarde: 0.1, label: "10 cent", type: "munt" },
+  { waarde: 0.05, label: "5 cent", type: "munt" },
+];
+
+const DOORHAAL_DATA = {
+  1: { gridSize: 5, targets: 1 },
+  2: { gridSize: 6, targets: 2 },
+  3: { gridSize: 7, targets: 2 },
+};
+const SYMBOLEN = ["★", "●", "▲", "■", "♦", "♥", "♣", "♠", "✚", "◆", "▼", "◐"];
+
+const GEHEUGEN_DATA = {
+  1: { paren: 6, items: ["🍎", "🐕", "🚗", "🏠", "☀️", "🌳"] },
+  2: { paren: 8, items: ["🍎", "🐕", "🚗", "🏠", "☀️", "🌳", "🎸", "🌹"] },
+  3: { paren: 10, items: ["🦒", "🎺", "🥦", "🦔", "🏛️", "🪜", "🦉", "🎻", "🌾", "🧭"] },
+};
+
+// ====== WISSELGELD DATA ======
+const WISSELGELD_DATA = {
+  1: [
+    { betaald: 5,  prijs: 3,   omschr: "Je koopt een brood voor €3. Je betaalt met €5." },
+    { betaald: 10, prijs: 7,   omschr: "Je koopt bloemen voor €7. Je betaalt met €10." },
+    { betaald: 5,  prijs: 2,   omschr: "Je koopt een krant voor €2. Je betaalt met €5." },
+    { betaald: 10, prijs: 4,   omschr: "Je koopt fruit voor €4. Je betaalt met €10." },
+    { betaald: 20, prijs: 15,  omschr: "Je koopt een boek voor €15. Je betaalt met €20." },
+    { betaald: 10, prijs: 6,   omschr: "Je koopt drankjes voor €6. Je betaalt met €10." },
+    { betaald: 5,  prijs: 1,   omschr: "Je koopt een lolly voor €1. Je betaalt met €5." },
+    { betaald: 20, prijs: 12,  omschr: "Je koopt een speelgoed voor €12. Je betaalt met €20." },
+  ],
+  2: [
+    { betaald: 10, prijs: 6.50,  omschr: "Je koopt een broodje voor €6,50. Je betaalt met €10." },
+    { betaald: 20, prijs: 13.75, omschr: "Je koopt eten voor €13,75. Je betaalt met €20." },
+    { betaald: 10, prijs: 4.20,  omschr: "Je koopt koffie en koek voor €4,20. Je betaalt met €10." },
+    { betaald: 50, prijs: 37,    omschr: "Je koopt schoenen voor €37. Je betaalt met €50." },
+    { betaald: 20, prijs: 11.50, omschr: "Je koopt een trui voor €11,50. Je betaalt met €20." },
+    { betaald: 10, prijs: 7.80,  omschr: "Je koopt groenten voor €7,80. Je betaalt met €10." },
+    { betaald: 50, prijs: 44,    omschr: "Je koopt een boek voor €44. Je betaalt met €50." },
+    { betaald: 20, prijs: 16.50, omschr: "Je koopt pizza voor €16,50. Je betaalt met €20." },
+  ],
+  3: [
+    { betaald: 20, prijs: 13.45, omschr: "Je koopt boodschappen voor €13,45. Je betaalt met €20." },
+    { betaald: 50, prijs: 32.60, omschr: "Je koopt kleding voor €32,60. Je betaalt met €50." },
+    { betaald: 10, prijs: 7.35,  omschr: "Je koopt tijdschrift voor €7,35. Je betaalt met €10." },
+    { betaald: 50, prijs: 41.85, omschr: "Je koopt speelgoed voor €41,85. Je betaalt met €50." },
+    { betaald: 20, prijs: 14.90, omschr: "Je koopt bloemen voor €14,90. Je betaalt met €20." },
+    { betaald: 100, prijs: 67.25, omschr: "Je koopt een tas voor €67,25. Je betaalt met €100." },
+    { betaald: 50, prijs: 28.40, omschr: "Je koopt cadeau voor €28,40. Je betaalt met €50." },
+    { betaald: 20, prijs: 11.75, omschr: "Je koopt lunch voor €11,75. Je betaalt met €20." },
+  ]
+};
+
+// ====== SOLDEN DATA (% korting) ======
+const SOLDEN_DATA = {
+  1: [
+    { origineel: 10, korting: 50, vraag: "Een trui kost €10. Er is 50% solden. Wat betaal je?" },
+    { origineel: 20, korting: 50, vraag: "Schoenen kosten €20. Er is 50% solden. Wat betaal je?" },
+    { origineel: 8,  korting: 25, vraag: "Een boek kost €8. Er is 25% korting. Wat betaal je?" },
+    { origineel: 12, korting: 50, vraag: "Een speelgoed kost €12. Halve prijs tijdens solden. Wat betaal je?" },
+    { origineel: 6,  korting: 50, vraag: "Een pet kost €6. Alles aan halve prijs. Wat betaal je?" },
+    { origineel: 40, korting: 25, vraag: "Een jas kost €40. Er is 25% korting. Wat betaal je?" },
+    { origineel: 16, korting: 50, vraag: "Een hemd kost €16. Er is 50% solden. Wat betaal je?" },
+    { origineel: 20, korting: 25, vraag: "Een broek kost €20. Er is 25% korting. Wat betaal je?" },
+  ],
+  2: [
+    { origineel: 30, korting: 30, vraag: "Een tas kost €30. Er is 30% solden. Wat betaal je?" },
+    { origineel: 50, korting: 20, vraag: "Laarzen kosten €50. Er is 20% korting. Wat betaal je?" },
+    { origineel: 24, korting: 25, vraag: "Een trui kost €24. Er is 25% korting. Wat betaal je?" },
+    { origineel: 40, korting: 30, vraag: "Schoenen kosten €40. Er is 30% solden. Wat betaal je?" },
+    { origineel: 60, korting: 20, vraag: "Een jas kost €60. Er is 20% solden. Wat betaal je?" },
+    { origineel: 35, korting: 40, vraag: "Een rugzak kost €35. Er is 40% korting. Wat betaal je?" },
+    { origineel: 80, korting: 25, vraag: "Sportschoenen kosten €80. Er is 25% korting. Wat betaal je?" },
+    { origineel: 45, korting: 20, vraag: "Een hemd kost €45. Er is 20% solden. Wat betaal je?" },
+  ],
+  3: [
+    { origineel: 75, korting: 30, vraag: "Een winterjas kost €75. Er is 30% solden. Wat betaal je?" },
+    { origineel: 120, korting: 25, vraag: "Sportschoenen kosten €120. Er is 25% korting. Wat betaal je?" },
+    { origineel: 55, korting: 40, vraag: "Een tas kost €55. Er is 40% solden. Wat betaal je?" },
+    { origineel: 90, korting: 30, vraag: "Een fietshelm kost €90. Er is 30% solden. Wat betaal je?" },
+    { origineel: 65, korting: 20, vraag: "Laarzen kosten €65. Er is 20% korting. Wat betaal je?" },
+    { origineel: 48, korting: 25, vraag: "Een broek kost €48. Er is 25% korting. Wat betaal je?" },
+    { origineel: 110, korting: 30, vraag: "Een jas kost €110. Er is 30% solden. Wat betaal je?" },
+    { origineel: 85, korting: 40, vraag: "Schoenen kosten €85. Er is 40% solden. Wat betaal je?" },
+  ]
+};
+
+// ====== REKENVRAAGSTUKKEN DATA (NAH-vriendelijk) ======
+const REKEN_DATA = {
+  1: [
+    { vraag: "Je hebt 5 appels. Je eet er 2 op. Hoeveel appels heb je nog?", antwoord: 3, opties: [3, 2, 5, 7] },
+    { vraag: "Je koopt 3 broden. Je geeft er 1 weg. Hoeveel broden heb je nog?", antwoord: 2, opties: [2, 3, 4, 1] },
+    { vraag: "Je zet 4 kopjes op tafel. Er zitten al 2 kopjes. Hoeveel kopjes zijn er nu?", antwoord: 6, opties: [6, 4, 2, 8] },
+    { vraag: "Je wandelt 3 km 's morgens en 2 km 's middags. Hoeveel km wandel je in totaal?", antwoord: 5, opties: [5, 3, 2, 6] },
+    { vraag: "Er zijn 8 koekjes op een schaal. Je eet er 3 op. Hoeveel koekjes blijven over?", antwoord: 5, opties: [5, 8, 3, 11] },
+    { vraag: "Je hebt 2 pakken melk. Je koopt er nog 3. Hoeveel pakken melk heb je nu?", antwoord: 5, opties: [5, 2, 3, 6] },
+    { vraag: "Je plant 6 bloemen in je tuin. 2 gaan dood. Hoeveel bloemen leven er nog?", antwoord: 4, opties: [4, 6, 2, 8] },
+    { vraag: "Je hebt 10 euro. Je geeft 4 euro uit. Hoeveel euro heb je nog?", antwoord: 6, opties: [6, 10, 4, 14] },
+  ],
+  2: [
+    { vraag: "Je rijdt elke dag 15 km naar het werk en 15 km terug. Hoeveel km rijd je op een dag?", antwoord: 30, opties: [30, 15, 25, 20] },
+    { vraag: "Je koopt 4 pakken water van €2 elk. Hoeveel betaal je in totaal?", antwoord: 8, opties: [8, 6, 10, 4] },
+    { vraag: "Je werkt 5 dagen per week, 8 uur per dag. Hoeveel uur werk je per week?", antwoord: 40, opties: [40, 35, 45, 30] },
+    { vraag: "Je hebt 50 euro. Je koopt een T-shirt voor €18 en een boek voor €12. Hoeveel houd je over?", antwoord: 20, opties: [20, 30, 18, 22] },
+    { vraag: "Een recept is voor 4 personen: 200g bloem. Jij kookt voor 8 personen. Hoeveel bloem heb je nodig?", antwoord: 400, opties: [400, 200, 300, 600] },
+    { vraag: "Je spaart €25 per maand. Hoeveel spaargeld heb je na 4 maanden?", antwoord: 100, opties: [100, 75, 80, 125] },
+    { vraag: "Er zitten 24 flessen in een krat. Je hebt 2 kratten. Hoeveel flessen zijn dat?", antwoord: 48, opties: [48, 24, 36, 42] },
+    { vraag: "Je bent om 14u00 vertrokken en bent om 16u30 aangekomen. Hoe lang was de rit?", antwoord: "2u30", opties: ["2u30", "1u30", "3u00", "2u00"] },
+  ],
+  3: [
+    { vraag: "Een tv kost €349. Er is een korting van €50. Hoeveel betaal je?", antwoord: 299, opties: [299, 349, 299, 319] },
+    { vraag: "Je rijdt 120 km op 8 liter benzine. Hoeveel liter heb je nodig voor 60 km?", antwoord: 4, opties: [4, 8, 6, 3] },
+    { vraag: "Je werkt 38 uur per week en verdient €12 per uur. Hoeveel verdien je per week?", antwoord: 456, opties: [456, 380, 420, 480] },
+    { vraag: "Je koopt 3 flessen van €2,50 en 2 pakken van €1,75. Hoeveel betaal je?", antwoord: 11, opties: [11, 10, 12, 9.5] },
+    { vraag: "Een trein vertrekt om 09u15 en rijdt 1u45 lang. Wanneer komt hij aan?", antwoord: "11u00", opties: ["11u00", "10u45", "11u15", "10u30"] },
+    { vraag: "Je hebt €200 spaargeld. Je geeft elke week €15 uit. Hoeveel weken gaat dat mee?", antwoord: 13, opties: [13, 10, 15, 12] },
+    { vraag: "Een recept vraagt 3 eieren per persoon. Je kookt voor 5 personen. Hoeveel eieren?", antwoord: 15, opties: [15, 12, 18, 10] },
+    { vraag: "Je tuin is 8m lang en 5m breed. Wat is de oppervlakte?", antwoord: 40, opties: [40, 26, 35, 45] },
+  ]
+};
+
+// ====== REEKS ONTHOUDEN DATA ======
+const REEKS_DATA = {
+  1: { lengte: 3, items: ["🍎","🐕","🚗","🏠","☀️","🌳","🎈","🐱","🦋","🌺"] },
+  2: { lengte: 4, items: ["🍎","🐕","🚗","🏠","☀️","🌳","🎸","🌹","🎺","🍕","🎯","🦁"] },
+  3: { lengte: 5, items: ["🦒","🎺","🥦","🦔","🏛️","🪜","🦉","🎻","🌾","🧭","🎨","🏆","🎭","🌍","🦅"] },
+};
+
+// ====== WOORD-PLAATJE KOPPELEN DATA ======
+const KOPPELEN_DATA = {
+  1: [
+    { woord: "hond", plaatje: "🐕" }, { woord: "kat", plaatje: "🐱" },
+    { woord: "auto", plaatje: "🚗" }, { woord: "huis", plaatje: "🏠" },
+    { woord: "zon", plaatje: "☀️" }, { woord: "boom", plaatje: "🌳" },
+    { woord: "appel", plaatje: "🍎" }, { woord: "bloem", plaatje: "🌺" },
+  ],
+  2: [
+    { woord: "vliegtuig", plaatje: "✈️" }, { woord: "fiets", plaatje: "🚲" },
+    { woord: "gitaar", plaatje: "🎸" }, { woord: "roos", plaatje: "🌹" },
+    { woord: "pizza", plaatje: "🍕" }, { woord: "voetbal", plaatje: "⚽" },
+    { woord: "sleutel", plaatje: "🔑" }, { woord: "boek", plaatje: "📖" },
+  ],
+  3: [
+    { woord: "giraf", plaatje: "🦒" }, { woord: "trompet", plaatje: "🎺" },
+    { woord: "broccoli", plaatje: "🥦" }, { woord: "egel", plaatje: "🦔" },
+    { woord: "trofee", plaatje: "🏆" }, { woord: "kompas", plaatje: "🧭" },
+    { woord: "uil", plaatje: "🦉" }, { woord: "viool", plaatje: "🎻" },
+  ],
+};
+
+// ====== VOLGORDE AANDACHT DATA ======
+const VOLGORDE_DATA = {
+  1: { aantalKnoppen: 4, reeksLengte: 3 },
+  2: { aantalKnoppen: 5, reeksLengte: 4 },
+  3: { aantalKnoppen: 6, reeksLengte: 5 },
+};
+
+// ====== STROOP-LIGHT DATA (kleur-woord) ======
+const STROOP_KLEUREN = [
+  { naam: "rood",  kleur: "#e53935" },
+  { naam: "blauw", kleur: "#1e88e5" },
+  { naam: "groen", kleur: "#43a047" },
+  { naam: "geel",  kleur: "#fdd835" },
+];
+
+// Klinkers voor letter-kiezen oefening
+const KLINKERS = ["a", "e", "i", "o", "u"];
+
+// ====== INSTELLINGEN ======
+const STANDAARD_INSTELLINGEN = {
+  pin: "1234",
+  moeilijkheid: 1,
+  tekstgrootte: "normaal",
+  hoogContrast: false,
+  spraak: false,
+  geluidsEffecten: true,
+  tijdsLimiet: 0,
+  autoVolgende: true,
+  autoVolgendeVertraging: 2,
+  vragenPerSessie: 10,
+  voortgangBijhouden: true,
+  visueleFeedback: true,
+  typModus: false,
+  herhaalFouten: true,
+};
+
+function laadInstellingen() {
+  try {
+    const o = localStorage.getItem("oefenapp_instellingen");
+    if (o) return { ...STANDAARD_INSTELLINGEN, ...JSON.parse(o) };
+  } catch(e) {}
+  return { ...STANDAARD_INSTELLINGEN };
+}
+function bewaarInstellingen(i) {
+  try { localStorage.setItem("oefenapp_instellingen", JSON.stringify(i)); } catch(e) {}
+}
+function laadStats() {
+  try {
+    const s = localStorage.getItem("oefenapp_stats");
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return { sessies: [] };
+}
+function bewaarStats(s) {
+  try { localStorage.setItem("oefenapp_stats", JSON.stringify(s)); } catch(e) {}
+}
+
+// Spraak
+function spreek(t, aan) {
+  if (!aan || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t);
+  u.lang = "nl-NL"; u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+
+// Geluid
+const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+function speelToon(freq, duur, type) {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type || "sine";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duur);
+  } catch(e) {}
+}
+function geluidGoed(aan) {
+  if (!aan) return;
+  speelToon(660, 0.15);
+  setTimeout(() => speelToon(880, 0.2), 120);
+}
+function geluidFout(aan) {
+  if (!aan) return;
+  speelToon(220, 0.3, "square");
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function normaliseer(s) { return (s||"").toLowerCase().trim().replace(/[.,!?;:]/g, ""); }
+function formatEuro(n) {
+  if (Number.isInteger(n)) return "€ " + n;
+  return "€ " + n.toFixed(2).replace(".", ",");
+}
+
+// App state
+let instellingen = laadInstellingen();
+let huidigScherm = "menu";
+let huidigeOefening = null;
+let oefenStaat = null;
+let geschiedenis = []; // voor terug-knop
+
+function navigeerNaar(scherm) {
+  geschiedenis.push(huidigScherm);
+  huidigScherm = scherm;
+  render();
+}
+function terug() {
+  if (oefenStaat && oefenStaat.tikker) clearInterval(oefenStaat.tikker);
+  if (geschiedenis.length === 0) {
+    huidigScherm = "menu";
+  } else {
+    huidigScherm = geschiedenis.pop();
+  }
+  render();
+}
+function naarMenu() {
+  if (oefenStaat && oefenStaat.tikker) clearInterval(oefenStaat.tikker);
+  geschiedenis = [];
+  huidigScherm = "menu";
+  render();
+}
+
+function pasInstellingenToe() {
+  document.body.classList.toggle("text-large", instellingen.tekstgrootte === "large");
+  document.body.classList.toggle("text-xlarge", instellingen.tekstgrootte === "xlarge");
+  document.body.classList.toggle("high-contrast", instellingen.hoogContrast);
+}
+// ====== RENDER ======
+function render() {
+  pasInstellingenToe();
+  const root = document.getElementById("root");
+  root.innerHTML = "";
+  root.appendChild(maakTopbar());
+
+  const app = document.createElement("div");
+  app.className = "app";
+  app.style.paddingTop = "0";
+
+  if (huidigScherm === "menu") app.appendChild(maakMenu());
+  else if (huidigScherm === "woord") app.appendChild(maakWoordOefening());
+  else if (huidigScherm === "letterkiezen") app.appendChild(maakLetterKiezenOefening());
+  else if (huidigScherm === "letterinvullen") app.appendChild(maakLetterInvullenOefening());
+  else if (huidigScherm === "benoemen") app.appendChild(maakBenoemenOefening());
+  else if (huidigScherm === "watpast") app.appendChild(maakWatPastOefening());
+  else if (huidigScherm === "watpastniet") app.appendChild(maakWatPastNietOefening());
+  else if (huidigScherm === "lettergreep") app.appendChild(maakLettergreepOefening());
+  else if (huidigScherm === "synoniem") app.appendChild(maakSynoniemOefening());
+  else if (huidigScherm === "zinnen") app.appendChild(maakZinnenOefening());
+  else if (huidigScherm === "geheugen") app.appendChild(maakGeheugenOefening());
+  else if (huidigScherm === "woordplaatje") app.appendChild(maakWoordPlaatjeOefening());
+  else if (huidigScherm === "reeksonthouden") app.appendChild(maakReeksOnthoudenOefening());
+  else if (huidigScherm === "aandacht") app.appendChild(maakAandachtOefening());
+  else if (huidigScherm === "volgorde") app.appendChild(maakVolgordeOefening());
+  else if (huidigScherm === "stroop") app.appendChild(maakStroopOefening());
+  else if (huidigScherm === "geld") app.appendChild(maakGeldOefening());
+  else if (huidigScherm === "wisselgeld") app.appendChild(maakWisselgeldOefening());
+  else if (huidigScherm === "solden") app.appendChild(maakSoldenOefening());
+  else if (huidigScherm === "reken") app.appendChild(maakRekenOefening());
+  else if (huidigScherm === "resultaten") app.appendChild(maakResultaten());
+
+  root.appendChild(app);
+
+  if (huidigScherm === "pin") root.appendChild(maakPinModal());
+  if (huidigScherm === "instellingen") root.appendChild(maakInstellingenModal());
+}
+
+function maakTopbar() {
+  const wrap = document.createElement("div");
+  wrap.className = "app";
+  wrap.style.paddingBottom = "0";
+
+  const bar = document.createElement("header");
+  bar.className = "topbar";
+
+  const links = document.createElement("div");
+  links.className = "topbar-left";
+
+  // Terug-knop
+  if (huidigScherm !== "menu") {
+    const back = document.createElement("button");
+    back.className = "back";
+    back.innerHTML = "← Terug";
+    back.title = "Ga terug naar het vorige scherm";
+    back.onclick = () => terug();
+    links.appendChild(back);
+  }
+
+  const logo = document.createElement("div");
+  logo.className = "logo";
+  logo.textContent = "📚 Oefenapp";
+  links.appendChild(logo);
+
+  const acties = document.createElement("div");
+  acties.className = "topbar-actions";
+
+  if (huidigScherm !== "menu") {
+    const home = document.createElement("button");
+    home.textContent = "🏠 Menu";
+    home.onclick = () => naarMenu();
+    acties.appendChild(home);
+  }
+
+  const inst = document.createElement("button");
+  inst.className = "icon";
+  inst.title = "Instellingen (therapeut)";
+  inst.textContent = "⚙️";
+  inst.onclick = () => navigeerNaar("pin");
+  acties.appendChild(inst);
+
+  bar.appendChild(links);
+  bar.appendChild(acties);
+  wrap.appendChild(bar);
+  return wrap;
+}
+
+// ====== MENU MET CATEGORIEËN ======
+function maakMenu() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+
+  const h = document.createElement("h1");
+  h.textContent = "Kies een oefening";
+  panel.appendChild(h);
+
+  const p = document.createElement("p");
+  p.style.marginBottom = "32px";
+  p.textContent = "Klik op een oefening om te beginnen. Bovenaan staat het huidige niveau: " +
+    ["", "Makkelijk", "Gemiddeld", "Moeilijk"][instellingen.moeilijkheid] + ".";
+  panel.appendChild(p);
+
+  const categorieen = [
+    {
+      titel: "📝 Taal",
+      oefeningen: [
+        { id: "woord", ico: "🖼️", titel: "Welk woord?", omschr: "Plaatje + woord kiezen" },
+        { id: "benoemen", ico: "✍️", titel: "Benoemen", omschr: "Typ het woord bij het plaatje" },
+        { id: "letterkiezen", ico: "🔤", titel: "Letter kiezen", omschr: "Kies de ontbrekende letter" },
+        { id: "letterinvullen", ico: "⌨️", titel: "Letter invullen", omschr: "Typ de ontbrekende letter" },
+        { id: "lettergreep", ico: "📖", titel: "Lettergreep", omschr: "Maak het woord af" },
+        { id: "watpast", ico: "🔗", titel: "Wat past?", omschr: "Welk woord hoort erbij" },
+        { id: "watpastniet", ico: "❌", titel: "Wat past niet?", omschr: "Vind de buitenstaander" },
+        { id: "synoniem", ico: "🔄", titel: "Synoniem", omschr: "Welk woord betekent hetzelfde" },
+        { id: "zinnen", ico: "📝", titel: "Zinnen aanvullen", omschr: "Vul het juiste woord in" },
+      ]
+    },
+    {
+      titel: "🧠 Geheugen",
+      oefeningen: [
+        { id: "geheugen",      ico: "🃏", titel: "Geheugenspel",       omschr: "Vind de paren door kaarten om te draaien" },
+        { id: "woordplaatje",  ico: "🔗", titel: "Woord-plaatje",       omschr: "Koppel het woord aan het juiste plaatje" },
+        { id: "reeksonthouden",ico: "🔢", titel: "Reeks onthouden",     omschr: "Onthoud en herhaal een reeks plaatjes" },
+      ]
+    },
+    {
+      titel: "🎯 Volgehouden aandacht",
+      oefeningen: [
+        { id: "aandacht", ico: "🎯", titel: "Doorhaaltaak",       omschr: "Klik alle doel-symbolen in het raster" },
+        { id: "volgorde",  ico: "💡", titel: "Volgorde onthouden", omschr: "Onthoud en herhaal de volgorde van lichtjes" },
+        { id: "stroop",    ico: "🎨", titel: "Kleur benoemen",     omschr: "Klik op de kleur van de letters, niet het woord" },
+      ]
+    },
+    {
+      titel: "💶 Rekenen met geld",
+      oefeningen: [
+        { id: "geld",       ico: "💰", titel: "Gepast betalen",     omschr: "Klik op munten en biljetten" },
+        { id: "wisselgeld", ico: "🔄", titel: "Wisselgeld",         omschr: "Hoeveel wisselgeld krijg je terug?" },
+        { id: "solden",     ico: "🏷️", titel: "Solden & korting",   omschr: "Bereken de prijs na korting" },
+        { id: "reken",      ico: "🧮", titel: "Rekenvraagstukken",  omschr: "Dagelijkse situaties berekenen" },
+      ]
+    },
+  ];
+
+  categorieen.forEach(cat => {
+    const sectie = document.createElement("div");
+    sectie.className = "categorie";
+
+    const ctitel = document.createElement("h2");
+    ctitel.textContent = cat.titel;
+    sectie.appendChild(ctitel);
+
+    const grid = document.createElement("div");
+    grid.className = "menu-grid";
+    cat.oefeningen.forEach(o => {
+      const card = document.createElement("div");
+      card.className = "menu-card";
+      card.onclick = () => startOefening(o.id);
+      card.tabIndex = 0;
+      card.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") startOefening(o.id); };
+      card.innerHTML = `<div class="ico">${o.ico}</div><h3>${o.titel}</h3><p>${o.omschr}</p>`;
+      grid.appendChild(card);
+    });
+    sectie.appendChild(grid);
+    panel.appendChild(sectie);
+  });
+
+  const stats = laadStats();
+  if (stats.sessies && stats.sessies.length > 0) {
+    const samen = document.createElement("p");
+    samen.style.marginTop = "20px";
+    samen.style.color = "var(--muted)";
+    samen.style.textAlign = "center";
+    samen.innerHTML = `Aantal voltooide sessies: <strong>${stats.sessies.length}</strong>`;
+    panel.appendChild(samen);
+  }
+
+  return panel;
+}
+
+// ====== GEMEENSCHAPPELIJKE HELPERS VOOR Q&A-OEFENINGEN ======
+function maakStandaardQaState(items) {
+  return {
+    items, index: 0, goed: 0, fout: 0, foutItems: [],
+    startTijd: Date.now(),
+    typValue: "",
+    antwoordGegeven: false,
+    gekozen: null,
+    opties: null,
+    timer: instellingen.tijdsLimiet,
+    tikker: null,
+  };
+}
+
+function maakOefeningHeader(titel) {
+  const head = document.createElement("div");
+  head.className = "exercise-header";
+  head.innerHTML = `
+    <h2 style="margin:0">${titel}</h2>
+    <div class="exercise-info">
+      <div>Vraag: <strong>${oefenStaat.index + 1} / ${oefenStaat.items.length}</strong></div>
+      <div>Goed: <strong style="color:var(--good)">${oefenStaat.goed}</strong></div>
+      ${instellingen.tijdsLimiet > 0 ? `<div class="timer">⏱️ ${oefenStaat.timer}s</div>` : ""}
+    </div>
+  `;
+  return head;
+}
+
+function maakVoortgangsBalk() {
+  const pb = document.createElement("div");
+  pb.className = "progress-bar";
+  pb.innerHTML = `<div class="progress-bar-fill" style="width:${(oefenStaat.index / oefenStaat.items.length) * 100}%"></div>`;
+  return pb;
+}
+
+function startTimer() {
+  if (oefenStaat.tikker) clearInterval(oefenStaat.tikker);
+  oefenStaat.timer = instellingen.tijdsLimiet;
+  oefenStaat.tikker = setInterval(() => {
+    oefenStaat.timer--;
+    const tEl = document.querySelector(".timer");
+    if (tEl) tEl.textContent = `⏱️ ${oefenStaat.timer}s`;
+    if (oefenStaat.timer <= 0) {
+      clearInterval(oefenStaat.tikker);
+      if (!oefenStaat.antwoordGegeven) antwoordTijdOp();
+    }
+  }, 1000);
+}
+function stopTimer() {
+  if (oefenStaat && oefenStaat.tikker) clearInterval(oefenStaat.tikker);
+}
+
+function antwoordTijdOp() {
+  if (oefenStaat.antwoordGegeven) return;
+  const huidig = oefenStaat.items[oefenStaat.index];
+  oefenStaat.gekozen = "(geen antwoord)";
+  oefenStaat.antwoordGegeven = true;
+  oefenStaat.fout++;
+  oefenStaat.foutItems.push(huidig);
+  geluidFout(instellingen.geluidsEffecten);
+  render();
+  if (instellingen.autoVolgende) setTimeout(volgendeQaVraag, instellingen.autoVolgendeVertraging * 1000);
+}
+
+function volgendeQaVraag() {
+  stopTimer();
+  if (oefenStaat.index + 1 >= oefenStaat.items.length) {
+    if (instellingen.herhaalFouten && oefenStaat.foutItems.length > 0 && !oefenStaat.herhaalGedaan) {
+      oefenStaat.items = [...oefenStaat.items, ...oefenStaat.foutItems];
+      oefenStaat.foutItems = [];
+      oefenStaat.herhaalGedaan = true;
+    } else {
+      voltooienOefening();
+      return;
+    }
+  }
+  oefenStaat.index++;
+  oefenStaat.antwoordGegeven = false;
+  oefenStaat.gekozen = null;
+  oefenStaat.opties = null;
+  oefenStaat.typValue = "";
+  render();
+  if (instellingen.tijdsLimiet > 0) startTimer();
+}
+
+function verwerkAntwoord(isGoed, juistAntwoord, item) {
+  stopTimer();
+  oefenStaat.antwoordGegeven = true;
+  if (isGoed) { oefenStaat.goed++; geluidGoed(instellingen.geluidsEffecten); }
+  else { oefenStaat.fout++; oefenStaat.foutItems.push(item); geluidFout(instellingen.geluidsEffecten); }
+  if (instellingen.spraak) spreek(isGoed ? "Goed gedaan" : "Het juiste antwoord is " + juistAntwoord, true);
+  render();
+  if (instellingen.autoVolgende) setTimeout(volgendeQaVraag, instellingen.autoVolgendeVertraging * 1000);
+}
+
+function maakFeedbackEnVolgende(isGoed, juistAntwoord) {
+  const wrap = document.createDocumentFragment();
+  const fb = document.createElement("div");
+  fb.className = "feedback " + (isGoed ? "good" : "bad");
+  fb.textContent = isGoed ? "✓ Goed gedaan!" : `✗ Het juiste antwoord is: ${juistAntwoord}`;
+  wrap.appendChild(fb);
+  if (!instellingen.autoVolgende) {
+    const next = document.createElement("div");
+    next.style.textAlign = "center";
+    next.style.marginTop = "20px";
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = oefenStaat.index + 1 < oefenStaat.items.length ? "Volgende vraag →" : "Resultaten bekijken →";
+    btn.style.fontSize = "1.1em";
+    btn.onclick = volgendeQaVraag;
+    next.appendChild(btn);
+    wrap.appendChild(next);
+  }
+  return wrap;
+}
+
+// Maak multiple-choice opties
+function maakOptiesBlok(opties, juistAntwoord, klikHandler, cols) {
+  const opts = document.createElement("div");
+  opts.className = "options" + (cols === 4 ? " cols-4" : cols === 3 ? " cols-3" : "");
+  opties.forEach(w => {
+    const b = document.createElement("div");
+    b.className = "option-btn";
+    b.textContent = w;
+    if (oefenStaat.antwoordGegeven) {
+      b.classList.add("disabled");
+      if (w === juistAntwoord) b.classList.add("correct");
+      else if (w === oefenStaat.gekozen) b.classList.add("wrong");
+    } else {
+      b.onclick = () => klikHandler(w);
+    }
+    opts.appendChild(b);
+  });
+  return opts;
+}
+
+// Maak type-input blok
+function maakTypBlok(checkHandler, placeholder) {
+  const inputBox = document.createElement("div");
+  inputBox.style.textAlign = "center";
+  const inp = document.createElement("input");
+  inp.type = "text";
+  inp.className = "type-input";
+  inp.placeholder = placeholder || "Typ hier het antwoord...";
+  inp.value = oefenStaat.typValue;
+  inp.disabled = oefenStaat.antwoordGegeven;
+  inp.oninput = (e) => { oefenStaat.typValue = e.target.value; };
+  inp.onkeydown = (e) => { if (e.key === "Enter" && !oefenStaat.antwoordGegeven) checkHandler(); };
+  setTimeout(() => inp.focus(), 50);
+  inputBox.appendChild(inp);
+  if (!oefenStaat.antwoordGegeven) {
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = "Antwoord controleren";
+    btn.style.fontSize = "1.1em";
+    btn.onclick = checkHandler;
+    inputBox.appendChild(btn);
+  }
+  return inputBox;
+}
+
+// ====== START OEFENING ======
+function startOefening(type) {
+  if (oefenStaat && oefenStaat.tikker) clearInterval(oefenStaat.tikker);
+  huidigeOefening = type;
+
+  if (type === "woord") {
+    const pool = WOORD_DATA[instellingen.moeilijkheid] || WOORD_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "letterkiezen" || type === "letterinvullen") {
+    const pool = LETTER_DATA[instellingen.moeilijkheid] || LETTER_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "benoemen") {
+    const pool = WOORD_DATA[instellingen.moeilijkheid] || WOORD_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "watpast") {
+    const pool = WATPAST_DATA[instellingen.moeilijkheid] || WATPAST_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "watpastniet") {
+    const pool = WATPASTNIET_DATA[instellingen.moeilijkheid] || WATPASTNIET_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "lettergreep") {
+    const pool = LETTERGREEP_DATA[instellingen.moeilijkheid] || LETTERGREEP_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "synoniem") {
+    const pool = SYNONIEM_DATA[instellingen.moeilijkheid] || SYNONIEM_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "zinnen") {
+    const pool = ZINNEN_DATA[instellingen.moeilijkheid] || ZINNEN_DATA[1];
+    oefenStaat = maakStandaardQaState(shuffle(pool).slice(0, instellingen.vragenPerSessie));
+  } else if (type === "geheugen") {
+    const data = GEHEUGEN_DATA[instellingen.moeilijkheid];
+    const items = data.items.slice(0, data.paren);
+    const kaarten = shuffle([...items, ...items].map((v, i) => ({ id: i, val: v, omgedraaid: false, gevonden: false })));
+    oefenStaat = { kaarten, geselecteerd: [], gevonden: 0, totaalParen: data.paren, pogingen: 0, startTijd: Date.now() };
+  } else if (type === "woordplaatje") {
+    const pool = shuffle(KOPPELEN_DATA[instellingen.moeilijkheid] || KOPPELEN_DATA[1]);
+    const items = pool.slice(0, Math.min(6, pool.length));
+    // Maak paren: woorden en plaatjes door elkaar
+    oefenStaat = { items, geselecteerd: null, gekoppeld: [], foutPogingen: 0, pogingen: 0, startTijd: Date.now(), fase: "kies_woord" };
+  } else if (type === "reeksonthouden") {
+    const conf = REEKS_DATA[instellingen.moeilijkheid];
+    const reeks = shuffle(conf.items).slice(0, conf.lengte);
+    oefenStaat = { reeks, toonFase: true, ingevoerd: [], ronde: 1, goed: 0, fout: 0, startTijd: Date.now(), aantalRondes: instellingen.vragenPerSessie };
+    // Automatisch na 2s switchen naar input-fase
+    setTimeout(() => { if (oefenStaat && oefenStaat.toonFase) { oefenStaat.toonFase = false; render(); } }, 3000);
+  } else if (type === "aandacht") {
+    const conf = DOORHAAL_DATA[instellingen.moeilijkheid];
+    const totaal = conf.gridSize * conf.gridSize;
+    const symbols = shuffle(SYMBOLEN);
+    const doelen = symbols.slice(0, conf.targets);
+    const overig = symbols.slice(conf.targets, conf.targets + 5);
+    const aantalDoelen = Math.floor(totaal * 0.25);
+    const cellen = [];
+    for (let i = 0; i < totaal; i++) {
+      if (i < aantalDoelen) cellen.push({ sym: doelen[i % doelen.length], doel: true });
+      else cellen.push({ sym: overig[Math.floor(Math.random() * overig.length)], doel: false });
+    }
+    oefenStaat = {
+      cellen: shuffle(cellen).map((c, i) => ({ ...c, id: i, gemarkeerd: false, fout: false })),
+      doelen, gridSize: conf.gridSize, gevonden: 0, missers: 0, totaalDoelen: aantalDoelen, startTijd: Date.now()
+    };
+  } else if (type === "volgorde") {
+    const conf = VOLGORDE_DATA[instellingen.moeilijkheid];
+    const kleuren = ["#e53935","#1e88e5","#43a047","#fdd835","#9c27b0","#ff9800"];
+    const knoppen = kleuren.slice(0, conf.aantalKnoppen);
+    const reeks = Array.from({length: conf.reeksLengte}, () => Math.floor(Math.random() * conf.aantalKnoppen));
+    oefenStaat = { knoppen, reeks, toonFase: false, ingevoerd: [], actieveKnop: null, wacht: false, goed: 0, fout: 0, ronde: 1, aantalRondes: instellingen.vragenPerSessie, startTijd: Date.now(), knoppenLabels: ["A","B","C","D","E","F"] };
+  } else if (type === "stroop") {
+    oefenStaat = { score: 0, fout: 0, ronde: 0, aantalRondes: instellingen.vragenPerSessie, huidig: null, startTijd: Date.now(), antwoordGegeven: false };
+    genereerStroopVraag();
+  } else if (type === "geld") {
+    const pool = GELD_DATA[instellingen.moeilijkheid] || GELD_DATA[1];
+    const bedragen = shuffle(pool).slice(0, instellingen.vragenPerSessie);
+    oefenStaat = {
+      items: bedragen.map(b => ({ doel: b })),
+      index: 0, goed: 0, fout: 0, foutItems: [],
+      startTijd: Date.now(),
+      mandje: [],
+      antwoordGegeven: false, isGoed: null,
+    };
+  } else if (type === "wisselgeld") {
+    const pool = shuffle(WISSELGELD_DATA[instellingen.moeilijkheid] || WISSELGELD_DATA[1]);
+    oefenStaat = maakStandaardQaState(pool.slice(0, instellingen.vragenPerSessie));
+  } else if (type === "solden") {
+    const pool = shuffle(SOLDEN_DATA[instellingen.moeilijkheid] || SOLDEN_DATA[1]);
+    oefenStaat = maakStandaardQaState(pool.slice(0, instellingen.vragenPerSessie));
+  } else if (type === "reken") {
+    const pool = shuffle(REKEN_DATA[instellingen.moeilijkheid] || REKEN_DATA[1]);
+    oefenStaat = maakStandaardQaState(pool.slice(0, instellingen.vragenPerSessie));
+  }
+  navigeerNaar(type);
+  if (type === "reeksonthouden") {
+    setTimeout(() => { if (oefenStaat && oefenStaat.toonFase) { oefenStaat.toonFase = false; render(); } }, 3000);
+  } else if (type === "volgorde") {
+    setTimeout(() => maakVolgordeAnimatie(), 800);
+  }
+  if (instellingen.tijdsLimiet > 0 && !["geheugen","woordplaatje","reeksonthouden","aandacht","volgorde","stroop","geld","wisselgeld"].includes(type)) startTimer();
+}
+
+function voltooienOefening() {
+  stopTimer();
+  if (instellingen.voortgangBijhouden && oefenStaat) {
+    const s = laadStats();
+    const tijd = Math.round((Date.now() - oefenStaat.startTijd) / 1000);
+    s.sessies.push({
+      type: huidigeOefening,
+      datum: Date.now(),
+      goed: oefenStaat.goed,
+      fout: oefenStaat.fout,
+      tijd,
+      niveau: instellingen.moeilijkheid
+    });
+    bewaarStats(s);
+  }
+  navigeerNaar("resultaten");
+}
+// ====== TAAL OEFENINGEN ======
+
+// --- Welk woord ---
+function maakWoordOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Welk woord past bij dit plaatje?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const pic = document.createElement("div");
+  pic.className = "picture-box";
+  pic.innerHTML = `<div class="picture">${huidig.plaatje}</div>`;
+  panel.appendChild(pic);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek woord uit"));
+
+  if (instellingen.typModus) {
+    panel.appendChild(maakTypBlok(() => {
+      const isGoed = normaliseer(oefenStaat.typValue) === normaliseer(huidig.woord);
+      oefenStaat.gekozen = oefenStaat.typValue;
+      verwerkAntwoord(isGoed, huidig.woord, huidig);
+    }, "Typ het woord..."));
+  } else {
+    if (!oefenStaat.opties) oefenStaat.opties = shuffle([huidig.woord, ...huidig.afleiders]);
+    panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.woord, (w) => {
+      oefenStaat.gekozen = w;
+      verwerkAntwoord(w === huidig.woord, huidig.woord, huidig);
+    }));
+  }
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen && normaliseer(oefenStaat.gekozen) === normaliseer(huidig.woord);
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.woord));
+  }
+
+  return panel;
+}
+
+function maakSpraakKnop(handler, tekst) {
+  const wrap = document.createElement("div");
+  wrap.style.textAlign = "center";
+  wrap.style.marginBottom = "16px";
+  const btn = document.createElement("button");
+  btn.textContent = tekst;
+  btn.onclick = handler;
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+// --- Benoemen (typ het woord bij plaatje, geen opties) ---
+function maakBenoemenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Hoe heet dit?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const pic = document.createElement("div");
+  pic.className = "picture-box";
+  pic.innerHTML = `<div class="picture">${huidig.plaatje}</div>`;
+  panel.appendChild(pic);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Hint: spreek voor"));
+
+  panel.appendChild(maakTypBlok(() => {
+    const isGoed = normaliseer(oefenStaat.typValue) === normaliseer(huidig.woord);
+    oefenStaat.gekozen = oefenStaat.typValue;
+    verwerkAntwoord(isGoed, huidig.woord, huidig);
+  }, "Typ hier de naam..."));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen && normaliseer(oefenStaat.gekozen) === normaliseer(huidig.woord);
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.woord));
+  }
+  return panel;
+}
+
+// --- Letter kiezen (plaatje + woord met gat, kies letter uit knoppen) ---
+function maakLetterKiezenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+  const ontbrekend = huidig.woord[huidig.gat].toLowerCase();
+
+  panel.appendChild(maakOefeningHeader("Welke letter ontbreekt?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const pic = document.createElement("div");
+  pic.className = "picture-box";
+  pic.innerHTML = `<div class="picture" style="font-size:6em">${huidig.plaatje}</div>`;
+  panel.appendChild(pic);
+
+  // Toon woord met gat
+  const woordBox = document.createElement("div");
+  woordBox.className = "word-with-blank";
+  let html = "";
+  for (let i = 0; i < huidig.woord.length; i++) {
+    if (i === huidig.gat) {
+      if (oefenStaat.antwoordGegeven) {
+        html += `<span class="blank-letter">${ontbrekend}</span>`;
+      } else {
+        html += `<span class="blank-letter">?</span>`;
+      }
+    } else {
+      html += huidig.woord[i];
+    }
+  }
+  woordBox.innerHTML = html;
+  panel.appendChild(woordBox);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek woord uit"));
+
+  // Genereer 4 letter-opties (1 juist, 3 andere klinkers/medeklinkers)
+  if (!oefenStaat.opties) {
+    let pool;
+    if (KLINKERS.includes(ontbrekend)) {
+      pool = KLINKERS.filter(l => l !== ontbrekend);
+    } else {
+      pool = ["b","d","f","g","k","l","m","n","p","r","s","t","v","w"].filter(l => l !== ontbrekend);
+    }
+    const afleiders = shuffle(pool).slice(0, 3);
+    oefenStaat.opties = shuffle([ontbrekend, ...afleiders]);
+  }
+
+  panel.appendChild(maakOptiesBlok(oefenStaat.opties, ontbrekend, (w) => {
+    oefenStaat.gekozen = w;
+    verwerkAntwoord(w === ontbrekend, ontbrekend.toUpperCase(), huidig);
+  }, 4));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen === ontbrekend;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, `${ontbrekend.toUpperCase()} (het woord is "${huidig.woord}")`));
+  }
+  return panel;
+}
+
+// --- Letter invullen (typ de ontbrekende letter) ---
+function maakLetterInvullenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+  const ontbrekend = huidig.woord[huidig.gat].toLowerCase();
+
+  panel.appendChild(maakOefeningHeader("Type de ontbrekende letter"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const pic = document.createElement("div");
+  pic.className = "picture-box";
+  pic.innerHTML = `<div class="picture" style="font-size:6em">${huidig.plaatje}</div>`;
+  panel.appendChild(pic);
+
+  const woordBox = document.createElement("div");
+  woordBox.className = "word-with-blank";
+  let html = "";
+  for (let i = 0; i < huidig.woord.length; i++) {
+    if (i === huidig.gat) {
+      if (oefenStaat.antwoordGegeven) {
+        html += `<span class="blank-letter">${ontbrekend}</span>`;
+      } else {
+        html += `<input type="text" class="type-input small" id="letterInput" maxlength="1" value="${oefenStaat.typValue}">`;
+      }
+    } else {
+      html += huidig.woord[i];
+    }
+  }
+  woordBox.innerHTML = html;
+  panel.appendChild(woordBox);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek woord uit"));
+
+  // Focus en handlers
+  if (!oefenStaat.antwoordGegeven) {
+    setTimeout(() => {
+      const inp = document.getElementById("letterInput");
+      if (inp) {
+        inp.focus();
+        inp.oninput = (e) => { oefenStaat.typValue = e.target.value; };
+        inp.onkeydown = (e) => {
+          if (e.key === "Enter" && oefenStaat.typValue) {
+            const isGoed = normaliseer(oefenStaat.typValue) === ontbrekend;
+            oefenStaat.gekozen = oefenStaat.typValue;
+            verwerkAntwoord(isGoed, ontbrekend.toUpperCase(), huidig);
+          }
+        };
+      }
+    }, 50);
+
+    const check = document.createElement("div");
+    check.style.textAlign = "center";
+    check.style.marginTop = "16px";
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = "Controleren";
+    btn.onclick = () => {
+      const inp = document.getElementById("letterInput");
+      if (!inp || !inp.value) return;
+      oefenStaat.typValue = inp.value;
+      const isGoed = normaliseer(oefenStaat.typValue) === ontbrekend;
+      oefenStaat.gekozen = oefenStaat.typValue;
+      verwerkAntwoord(isGoed, ontbrekend.toUpperCase(), huidig);
+    };
+    check.appendChild(btn);
+    panel.appendChild(check);
+  }
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = normaliseer(oefenStaat.gekozen || "") === ontbrekend;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, `${ontbrekend.toUpperCase()} (het woord is "${huidig.woord}")`));
+  }
+  return panel;
+}
+
+// --- Wat past (semantisch verwant woord) ---
+function maakWatPastOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Welk woord hoort het beste bij dit woord?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const dw = document.createElement("div");
+  dw.className = "doel-woord";
+  dw.innerHTML = `<div class="label">Bij welk woord hoort:</div><div class="woord">${huidig.woord}</div>`;
+  panel.appendChild(dw);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek voor"));
+
+  if (!oefenStaat.opties) oefenStaat.opties = shuffle([huidig.antwoord, ...huidig.afleiders]);
+  panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.antwoord, (w) => {
+    oefenStaat.gekozen = w;
+    verwerkAntwoord(w === huidig.antwoord, huidig.antwoord, huidig);
+  }, 4));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen === huidig.antwoord;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.antwoord));
+  }
+  return panel;
+}
+
+// --- Wat past niet (vind de buitenstaander) ---
+function maakWatPastNietOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Welk woord hoort NIET bij de andere?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const uitleg = document.createElement("p");
+  uitleg.style.textAlign = "center";
+  uitleg.style.fontSize = "1.05em";
+  uitleg.style.color = "var(--muted)";
+  uitleg.textContent = "Drie woorden horen bij elkaar. Welk woord past er niet bij?";
+  panel.appendChild(uitleg);
+
+  if (!oefenStaat.opties) oefenStaat.opties = shuffle(huidig.woorden);
+  panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.buiten, (w) => {
+    oefenStaat.gekozen = w;
+    verwerkAntwoord(w === huidig.buiten, huidig.buiten, huidig);
+  }, 4));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen === huidig.buiten;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.buiten));
+  }
+  return panel;
+}
+
+// --- Lettergreep (maak het woord af) ---
+function maakLettergreepOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Maak het woord af"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const sb = document.createElement("div");
+  sb.className = "word-with-blank";
+  if (oefenStaat.antwoordGegeven) {
+    sb.innerHTML = `${huidig.begin}<span class="blank-letter">${huidig.eind}</span>`;
+  } else {
+    sb.innerHTML = `${huidig.begin}<span class="blank-letter">...</span>`;
+  }
+  panel.appendChild(sb);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek heel woord uit"));
+
+  if (!oefenStaat.opties) oefenStaat.opties = shuffle([huidig.eind, ...huidig.afleiders]);
+  panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.eind, (w) => {
+    oefenStaat.gekozen = w;
+    verwerkAntwoord(w === huidig.eind, huidig.eind, huidig);
+  }, 4));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen === huidig.eind;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, `${huidig.eind} (het woord is "${huidig.woord}")`));
+  }
+  return panel;
+}
+
+// --- Synoniem ---
+function maakSynoniemOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Welk woord betekent hetzelfde?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const dw = document.createElement("div");
+  dw.className = "doel-woord";
+  dw.innerHTML = `<div class="label">Zoek het synoniem van:</div><div class="woord">${huidig.woord}</div>`;
+  panel.appendChild(dw);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.woord, true), "🔊 Spreek voor"));
+
+  if (!oefenStaat.opties) oefenStaat.opties = shuffle([huidig.antwoord, ...huidig.afleiders]);
+  panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.antwoord, (w) => {
+    oefenStaat.gekozen = w;
+    verwerkAntwoord(w === huidig.antwoord, huidig.antwoord, huidig);
+  }, 4));
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen === huidig.antwoord;
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.antwoord));
+  }
+  return panel;
+}
+
+// --- Zinnen aanvullen (4 opties, slechts 1 past) ---
+function maakZinnenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  panel.appendChild(maakOefeningHeader("Welk woord past in de zin?"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const uitleg = document.createElement("p");
+  uitleg.style.textAlign = "center";
+  uitleg.style.color = "var(--muted)";
+  uitleg.style.fontSize = "0.95em";
+  uitleg.style.marginBottom = "4px";
+  uitleg.textContent = "Kies het woord dat in de zin past. Slechts één antwoord klopt.";
+  panel.appendChild(uitleg);
+
+  const sb = document.createElement("div");
+  sb.className = "sentence-box";
+  let zin;
+  if (oefenStaat.antwoordGegeven) {
+    zin = huidig.zin.replace("___", `<span class="blank" style="color:var(--accent);border-bottom-color:var(--accent)"><strong>${huidig.antwoord}</strong></span>`);
+  } else {
+    zin = huidig.zin.replace("___", `<span class="blank" style="min-width:140px;font-size:1.1em;letter-spacing:0.05em">_ _ _</span>`);
+  }
+  sb.innerHTML = zin;
+  panel.appendChild(sb);
+
+  if (instellingen.spraak) panel.appendChild(maakSpraakKnop(() => spreek(huidig.zin.replace("___", "..."), true), "🔊 Lees zin voor"));
+
+  if (instellingen.typModus) {
+    panel.appendChild(maakTypBlok(() => {
+      const isGoed = normaliseer(oefenStaat.typValue) === normaliseer(huidig.antwoord);
+      oefenStaat.gekozen = oefenStaat.typValue;
+      verwerkAntwoord(isGoed, huidig.antwoord, huidig);
+    }, "Typ het ontbrekende woord..."));
+  } else {
+    if (!oefenStaat.opties) oefenStaat.opties = shuffle(huidig.opties);
+    panel.appendChild(maakOptiesBlok(oefenStaat.opties, huidig.antwoord, (w) => {
+      oefenStaat.gekozen = w;
+      verwerkAntwoord(w === huidig.antwoord, huidig.antwoord, huidig);
+    }, 4));
+  }
+
+  if (oefenStaat.antwoordGegeven) {
+    const isGoed = oefenStaat.gekozen && normaliseer(oefenStaat.gekozen) === normaliseer(huidig.antwoord);
+    panel.appendChild(maakFeedbackEnVolgende(isGoed, huidig.antwoord));
+  }
+  return panel;
+}
+// ====== GEHEUGEN ======
+function maakGeheugenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+
+  const head = document.createElement("div");
+  head.className = "exercise-header";
+  head.innerHTML = `
+    <h2 style="margin:0">Geheugenspel - Zoek de paren</h2>
+    <div class="exercise-info">
+      <div>Gevonden: <strong>${oefenStaat.gevonden} / ${oefenStaat.totaalParen}</strong></div>
+      <div>Pogingen: <strong>${oefenStaat.pogingen}</strong></div>
+    </div>
+  `;
+  panel.appendChild(head);
+
+  const cols = Math.ceil(Math.sqrt(oefenStaat.kaarten.length * 1.3));
+  const grid = document.createElement("div");
+  grid.className = "memory-grid";
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+  oefenStaat.kaarten.forEach(k => {
+    const c = document.createElement("div");
+    c.className = "memory-card";
+    if (k.omgedraaid || k.gevonden) c.classList.add("flipped");
+    if (k.gevonden) c.classList.add("matched");
+    c.textContent = (k.omgedraaid || k.gevonden) ? k.val : "?";
+    if (!k.gevonden && !k.omgedraaid && oefenStaat.geselecteerd.length < 2) {
+      c.onclick = () => draaiKaart(k.id);
+    }
+    grid.appendChild(c);
+  });
+  panel.appendChild(grid);
+
+  if (oefenStaat.gevonden === oefenStaat.totaalParen) {
+    const fb = document.createElement("div");
+    fb.className = "feedback good";
+    const tijd = Math.round((Date.now() - oefenStaat.startTijd) / 1000);
+    fb.innerHTML = `🎉 Alle paren gevonden in ${oefenStaat.pogingen} pogingen en ${tijd} seconden!`;
+    panel.appendChild(fb);
+    const next = document.createElement("div");
+    next.style.textAlign = "center";
+    next.style.marginTop = "20px";
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = "Terug naar menu";
+    btn.onclick = () => {
+      if (instellingen.voortgangBijhouden) {
+        const s = laadStats();
+        s.sessies.push({ type: "geheugen", datum: Date.now(), pogingen: oefenStaat.pogingen, tijd, niveau: instellingen.moeilijkheid });
+        bewaarStats(s);
+      }
+      naarMenu();
+    };
+    next.appendChild(btn);
+    panel.appendChild(next);
+  }
+  return panel;
+}
+
+function draaiKaart(id) {
+  const k = oefenStaat.kaarten.find(x => x.id === id);
+  if (!k || k.gevonden || k.omgedraaid) return;
+  if (oefenStaat.geselecteerd.length >= 2) return;
+  k.omgedraaid = true;
+  oefenStaat.geselecteerd.push(k);
+  render();
+  if (oefenStaat.geselecteerd.length === 2) {
+    oefenStaat.pogingen++;
+    const [a, b] = oefenStaat.geselecteerd;
+    if (a.val === b.val) {
+      setTimeout(() => {
+        a.gevonden = true; b.gevonden = true;
+        oefenStaat.gevonden++;
+        oefenStaat.geselecteerd = [];
+        geluidGoed(instellingen.geluidsEffecten);
+        render();
+      }, 600);
+    } else {
+      setTimeout(() => {
+        a.omgedraaid = false; b.omgedraaid = false;
+        oefenStaat.geselecteerd = [];
+        geluidFout(instellingen.geluidsEffecten);
+        render();
+      }, 1200);
+    }
+  }
+}
+
+// ====== VOLGEHOUDEN AANDACHT ======
+function maakAandachtOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+
+  const head = document.createElement("div");
+  head.className = "exercise-header";
+  head.innerHTML = `
+    <h2 style="margin:0">Klik op alle doel-symbolen</h2>
+    <div class="exercise-info">
+      <div>Gevonden: <strong style="color:var(--good)">${oefenStaat.gevonden} / ${oefenStaat.totaalDoelen}</strong></div>
+      <div>Missers: <strong style="color:var(--warn)">${oefenStaat.missers}</strong></div>
+    </div>
+  `;
+  panel.appendChild(head);
+
+  const target = document.createElement("div");
+  target.className = "target-display";
+  target.innerHTML = "Zoek en klik op: " + oefenStaat.doelen.map(d => `<span class="symbol">${d}</span>`).join(" en ");
+  panel.appendChild(target);
+
+  const grid = document.createElement("div");
+  grid.className = "attention-grid";
+  grid.style.gridTemplateColumns = `repeat(${oefenStaat.gridSize}, 1fr)`;
+
+  oefenStaat.cellen.forEach(c => {
+    const cell = document.createElement("div");
+    cell.className = "attention-cell";
+    if (c.gemarkeerd) cell.classList.add("marked-correct");
+    if (c.fout) cell.classList.add("marked-wrong");
+    cell.textContent = c.sym;
+    if (!c.gemarkeerd && !c.fout && oefenStaat.gevonden < oefenStaat.totaalDoelen) {
+      cell.onclick = () => klikAandachtCel(c.id);
+    }
+    grid.appendChild(cell);
+  });
+  panel.appendChild(grid);
+
+  if (oefenStaat.gevonden === oefenStaat.totaalDoelen) {
+    const tijd = Math.round((Date.now() - oefenStaat.startTijd) / 1000);
+    const fb = document.createElement("div");
+    fb.className = "feedback good";
+    fb.innerHTML = `🎉 Alle doelen gevonden! Tijd: ${tijd}s, missers: ${oefenStaat.missers}`;
+    panel.appendChild(fb);
+    const next = document.createElement("div");
+    next.style.textAlign = "center";
+    next.style.marginTop = "20px";
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = "Terug naar menu";
+    btn.onclick = () => {
+      if (instellingen.voortgangBijhouden) {
+        const s = laadStats();
+        s.sessies.push({ type: "aandacht", datum: Date.now(), tijd, missers: oefenStaat.missers, niveau: instellingen.moeilijkheid });
+        bewaarStats(s);
+      }
+      naarMenu();
+    };
+    next.appendChild(btn);
+    panel.appendChild(next);
+  }
+  return panel;
+}
+
+function klikAandachtCel(id) {
+  const c = oefenStaat.cellen.find(x => x.id === id);
+  if (!c || c.gemarkeerd || c.fout) return;
+  if (c.doel) {
+    c.gemarkeerd = true;
+    oefenStaat.gevonden++;
+    geluidGoed(instellingen.geluidsEffecten);
+  } else {
+    c.fout = true;
+    oefenStaat.missers++;
+    geluidFout(instellingen.geluidsEffecten);
+    setTimeout(() => { c.fout = false; render(); }, 800);
+  }
+  render();
+}
+
+// ====== GELD OEFENING ======
+function maakGeldOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+
+  const head = document.createElement("div");
+  head.className = "exercise-header";
+  head.innerHTML = `
+    <h2 style="margin:0">Gepast betalen</h2>
+    <div class="exercise-info">
+      <div>Vraag: <strong>${oefenStaat.index + 1} / ${oefenStaat.items.length}</strong></div>
+      <div>Goed: <strong style="color:var(--good)">${oefenStaat.goed}</strong></div>
+    </div>
+  `;
+  panel.appendChild(head);
+
+  panel.appendChild(maakVoortgangsBalk());
+
+  // Doel bedrag
+  const doel = document.createElement("div");
+  doel.className = "geld-doel";
+  doel.innerHTML = `Te betalen bedrag:<br><div class="bedrag">${formatEuro(huidig.doel)}</div>`;
+  panel.appendChild(doel);
+
+  if (instellingen.spraak) {
+    panel.appendChild(maakSpraakKnop(() => spreek("Betaal " + formatEuro(huidig.doel).replace("€","euro"), true), "🔊 Spreek bedrag uit"));
+  }
+
+  // Huidige som
+  const totaal = oefenStaat.mandje.reduce((s, m) => s + m.waarde, 0);
+  const verschil = Math.round((huidig.doel - totaal) * 100) / 100;
+
+  const betaald = document.createElement("div");
+  betaald.className = "geld-betaald";
+  let kleur = "var(--ink)";
+  if (Math.abs(verschil) < 0.001) kleur = "var(--good)";
+  else if (totaal > huidig.doel) kleur = "var(--warn)";
+  betaald.innerHTML = `Je geeft: <span class="bedrag" style="color:${kleur}">${formatEuro(totaal)}</span>`;
+  panel.appendChild(betaald);
+
+  // Mandje
+  const mandje = document.createElement("div");
+  mandje.className = "geld-mandje";
+  if (oefenStaat.mandje.length === 0) {
+    const leeg = document.createElement("div");
+    leeg.style.color = "var(--muted)";
+    leeg.style.alignSelf = "center";
+    leeg.style.fontStyle = "italic";
+    leeg.textContent = "Klik hieronder op munten en biljetten om te betalen";
+    mandje.appendChild(leeg);
+  } else {
+    oefenStaat.mandje.forEach((m, idx) => {
+      const item = document.createElement("div");
+      item.className = "geld-item " + m.type;
+      item.innerHTML = `<div class="waarde">${m.label}</div>`;
+      item.title = "Klik om te verwijderen";
+      if (!oefenStaat.antwoordGegeven) {
+        item.onclick = () => {
+          oefenStaat.mandje.splice(idx, 1);
+          render();
+        };
+      }
+      mandje.appendChild(item);
+    });
+  }
+  panel.appendChild(mandje);
+
+  // Beschikbare denominaties
+  if (!oefenStaat.antwoordGegeven) {
+    const titel = document.createElement("h3");
+    titel.style.marginTop = "24px";
+    titel.style.marginBottom = "8px";
+    titel.style.textAlign = "center";
+    titel.textContent = "Munten en biljetten";
+    panel.appendChild(titel);
+
+    const grid = document.createElement("div");
+    grid.className = "geld-grid";
+
+    // Filter beschikbare denominaties op niveau
+    let beschikbaar;
+    if (instellingen.moeilijkheid === 1) {
+      beschikbaar = GELD_DENOMINATIES.filter(d => d.waarde >= 1);
+    } else if (instellingen.moeilijkheid === 2) {
+      beschikbaar = GELD_DENOMINATIES.filter(d => d.waarde >= 1);
+    } else {
+      beschikbaar = GELD_DENOMINATIES;
+    }
+
+    beschikbaar.forEach(d => {
+      const item = document.createElement("div");
+      item.className = "geld-item " + d.type;
+      item.innerHTML = `<div class="waarde">${d.label}</div><div class="label">${d.type === "briefje" ? "biljet" : "munt"}</div>`;
+      item.onclick = () => {
+        oefenStaat.mandje.push({ ...d });
+        if (instellingen.spraak) spreek(d.label.replace("€","euro").replace("cent","cent"), true);
+        render();
+      };
+      grid.appendChild(item);
+    });
+    panel.appendChild(grid);
+
+    // Actie-knoppen
+    const acties = document.createElement("div");
+    acties.style.display = "flex";
+    acties.style.justifyContent = "center";
+    acties.style.gap = "12px";
+    acties.style.marginTop = "20px";
+    acties.style.flexWrap = "wrap";
+
+    const wissen = document.createElement("button");
+    wissen.textContent = "🗑️ Mandje leegmaken";
+    wissen.disabled = oefenStaat.mandje.length === 0;
+    wissen.onclick = () => { oefenStaat.mandje = []; render(); };
+    acties.appendChild(wissen);
+
+    const klaar = document.createElement("button");
+    klaar.className = "primary";
+    klaar.textContent = "✓ Betalen";
+    klaar.disabled = oefenStaat.mandje.length === 0;
+    klaar.onclick = () => checkGeldAntwoord();
+    acties.appendChild(klaar);
+
+    panel.appendChild(acties);
+
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.textContent = "Tip: klik op een briefje of munt in het mandje om die er weer uit te halen.";
+    panel.appendChild(hint);
+  } else {
+    // Feedback
+    const fb = document.createElement("div");
+    fb.className = "feedback " + (oefenStaat.isGoed ? "good" : "bad");
+    if (oefenStaat.isGoed) {
+      fb.textContent = "✓ Perfect gepast betaald!";
+    } else {
+      const teveel = totaal > huidig.doel;
+      fb.textContent = `✗ Niet gepast. Je gaf ${formatEuro(totaal)}, je moest ${formatEuro(huidig.doel)} betalen (${teveel ? formatEuro(Math.round((totaal - huidig.doel)*100)/100) + " te veel" : formatEuro(Math.round((huidig.doel - totaal)*100)/100) + " te weinig"}).`;
+    }
+    panel.appendChild(fb);
+
+    if (!instellingen.autoVolgende) {
+      const next = document.createElement("div");
+      next.style.textAlign = "center";
+      next.style.marginTop = "20px";
+      const btn = document.createElement("button");
+      btn.className = "primary";
+      btn.textContent = oefenStaat.index + 1 < oefenStaat.items.length ? "Volgende →" : "Resultaten →";
+      btn.onclick = volgendeGeldVraag;
+      next.appendChild(btn);
+      panel.appendChild(next);
+    }
+  }
+
+  return panel;
+}
+
+function checkGeldAntwoord() {
+  const huidig = oefenStaat.items[oefenStaat.index];
+  const totaal = Math.round(oefenStaat.mandje.reduce((s, m) => s + m.waarde, 0) * 100) / 100;
+  const isGoed = Math.abs(totaal - huidig.doel) < 0.001;
+  oefenStaat.antwoordGegeven = true;
+  oefenStaat.isGoed = isGoed;
+  if (isGoed) { oefenStaat.goed++; geluidGoed(instellingen.geluidsEffecten); }
+  else { oefenStaat.fout++; oefenStaat.foutItems.push(huidig); geluidFout(instellingen.geluidsEffecten); }
+  if (instellingen.spraak) spreek(isGoed ? "Heel goed" : "Het bedrag klopt niet", true);
+  render();
+  if (instellingen.autoVolgende) setTimeout(volgendeGeldVraag, instellingen.autoVolgendeVertraging * 1500);
+}
+
+function volgendeGeldVraag() {
+  if (oefenStaat.index + 1 >= oefenStaat.items.length) {
+    if (instellingen.herhaalFouten && oefenStaat.foutItems.length > 0 && !oefenStaat.herhaalGedaan) {
+      oefenStaat.items = [...oefenStaat.items, ...oefenStaat.foutItems];
+      oefenStaat.foutItems = [];
+      oefenStaat.herhaalGedaan = true;
+    } else {
+      voltooienOefening();
+      return;
+    }
+  }
+  oefenStaat.index++;
+  oefenStaat.mandje = [];
+  oefenStaat.antwoordGegeven = false;
+  oefenStaat.isGoed = null;
+  render();
+}
+
+// ====== WISSELGELD OEFENING ======
+function maakWisselgeldOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+  panel.appendChild(maakOefeningHeader("Wisselgeld teruggeven"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const vraagBox = document.createElement("div");
+  vraagBox.className = "sentence-box";
+  vraagBox.style.fontSize = "1.15em";
+  vraagBox.textContent = huidig.omschr;
+  panel.appendChild(vraagBox);
+
+  const wisselBedrag = Math.round((huidig.betaald - huidig.prijs) * 100) / 100;
+  const wisselLabel = document.createElement("p");
+  wisselLabel.style.textAlign = "center";
+  wisselLabel.style.color = "var(--muted)";
+  wisselLabel.style.marginBottom = "8px";
+  wisselLabel.textContent = "Hoeveel wisselgeld krijg je terug?";
+  panel.appendChild(wisselLabel);
+
+  // Genereer 4 opties rond het juiste antwoord
+  const juist = wisselBedrag;
+  const opties = shuffle([juist,
+    Math.max(0.5, juist - 1), juist + 1, juist + 2
+  ].map(v => Math.round(v * 100) / 100)).slice(0, 4);
+  if (!opties.includes(juist)) opties[0] = juist;
+
+  const feedbackEl = panel.appendChild(document.createElement("div"));
+  feedbackEl.style.minHeight = "40px";
+
+  const optBlok = maakOptiesBlok(
+    opties.map(o => formatEuro(o)),
+    formatEuro(juist),
+    (gekozen) => {
+      oefenStaat.gekozen = gekozen;
+      const isGoed = gekozen === formatEuro(juist);
+      verwerkAntwoord(isGoed, formatEuro(juist), huidig);
+    }, 2
+  );
+  panel.appendChild(optBlok);
+  if (oefenStaat.antwoordGegeven) panel.appendChild(maakFeedbackEnVolgende(oefenStaat.gekozen === formatEuro(juist), formatEuro(juist)));
+  return panel;
+}
+
+// ====== SOLDEN OEFENING ======
+function maakSoldenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+  panel.appendChild(maakOefeningHeader("Solden & korting"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const kortingsBedrag = Math.round(huidig.origineel * huidig.korting / 100);
+  const nieuwePrijs = huidig.origineel - kortingsBedrag;
+
+  // Visuele prijskaart
+  const kaart = document.createElement("div");
+  kaart.style.cssText = "background:#fff3cd;border:2px solid #f0ad4e;border-radius:16px;padding:20px;text-align:center;margin:16px 0;";
+  kaart.innerHTML = `
+    <div style="font-size:2em;margin-bottom:8px">🏷️</div>
+    <div style="font-size:1.2em;margin-bottom:6px">${huidig.vraag}</div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-top:12px;align-items:center;">
+      <div><div style="color:#888;font-size:0.9em">Originele prijs</div><div style="font-size:1.5em;text-decoration:line-through;color:#888">${formatEuro(huidig.origineel)}</div></div>
+      <div style="font-size:2em;color:#e53935">-${huidig.korting}%</div>
+      <div><div style="color:#43a047;font-size:0.9em">Jij betaalt</div><div style="font-size:1.8em;font-weight:bold;color:#43a047">?</div></div>
+    </div>`;
+  panel.appendChild(kaart);
+
+  // Opties: juiste prijs + 3 plausibele alternatieven
+  const juist = nieuwePrijs;
+  const alts = [juist + 5, Math.max(1, juist - 5), huidig.origineel];
+  const opties = shuffle([juist, ...alts]).slice(0, 4);
+  if (!opties.includes(juist)) opties[0] = juist;
+
+  panel.appendChild(maakOptiesBlok(
+    opties.map(o => formatEuro(o)),
+    formatEuro(juist),
+    (gekozen) => {
+      oefenStaat.gekozen = gekozen;
+      const isGoed = gekozen === formatEuro(juist);
+      verwerkAntwoord(isGoed, formatEuro(juist), huidig);
+    }, 2
+  ));
+  if (oefenStaat.antwoordGegeven) panel.appendChild(maakFeedbackEnVolgende(oefenStaat.gekozen === formatEuro(juist), `${formatEuro(juist)} (${huidig.korting}% van ${formatEuro(huidig.origineel)} = ${formatEuro(kortingsBedrag)} korting)`));
+  return panel;
+}
+
+// ====== REKENVRAAGSTUKKEN OEFENING ======
+function maakRekenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const huidig = oefenStaat.items[oefenStaat.index];
+  panel.appendChild(maakOefeningHeader("Rekenvraagstuk"));
+  panel.appendChild(maakVoortgangsBalk());
+
+  const uitleg = document.createElement("p");
+  uitleg.style.textAlign = "center";
+  uitleg.style.color = "var(--muted)";
+  uitleg.style.fontSize = "0.9em";
+  uitleg.textContent = "Kies het juiste antwoord.";
+  panel.appendChild(uitleg);
+
+  const vraagBox = document.createElement("div");
+  vraagBox.className = "sentence-box";
+  vraagBox.style.fontSize = "1.1em";
+  vraagBox.style.lineHeight = "1.6";
+  vraagBox.textContent = huidig.vraag;
+  panel.appendChild(vraagBox);
+
+  const juist = String(huidig.antwoord);
+  const opties = huidig.opties.map(String);
+
+  panel.appendChild(maakOptiesBlok(
+    opties, juist,
+    (gekozen) => {
+      oefenStaat.gekozen = gekozen;
+      const isGoed = gekozen === juist;
+      verwerkAntwoord(isGoed, juist, huidig);
+    }, 2
+  ));
+  if (oefenStaat.antwoordGegeven) panel.appendChild(maakFeedbackEnVolgende(oefenStaat.gekozen === juist, juist));
+  return panel;
+}
+
+// ====== WOORD-PLAATJE KOPPELEN ======
+function maakWoordPlaatjeOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.appendChild(maakOefeningHeader("Woord-plaatje koppelen"));
+
+  const info = document.createElement("div");
+  info.className = "exercise-info";
+  info.style.justifyContent = "center";
+  info.style.marginBottom = "8px";
+  const gekoppeld = oefenStaat.gekoppeld.length;
+  const totaal = oefenStaat.items.length;
+  info.innerHTML = `Gekoppeld: <strong>${gekoppeld} / ${totaal}</strong> &nbsp; Fouten: <strong style="color:var(--warn)">${oefenStaat.foutPogingen}</strong>`;
+  panel.appendChild(info);
+
+  const uitleg = document.createElement("p");
+  uitleg.style.textAlign = "center";
+  uitleg.style.color = "var(--muted)";
+  uitleg.style.fontSize = "0.9em";
+  uitleg.style.marginBottom = "12px";
+  uitleg.textContent = "Klik eerst op een woord, dan op het bijbehorende plaatje.";
+  panel.appendChild(uitleg);
+
+  const gekozenWoord = oefenStaat.gekozenWoord || null;
+  const gekozenPlaatje = oefenStaat.gekozenPlaatje || null;
+
+  // Gemengde lijst: woorden links, plaatjes rechts
+  const container = document.createElement("div");
+  container.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:500px;margin:0 auto;";
+
+  // Links: woorden
+  const woordenCol = document.createElement("div");
+  woordenCol.style.cssText = "display:flex;flex-direction:column;gap:8px;";
+  const woordItems = shuffle(oefenStaat.items.map((it, i) => ({ ...it, idx: i })));
+
+  woordItems.forEach(it => {
+    const al = oefenStaat.gekoppeld.find(k => k.woord === it.woord);
+    const btn = document.createElement("button");
+    btn.textContent = it.woord;
+    btn.style.cssText = `font-size:1.1em;padding:12px;border-radius:10px;border:2px solid ${al ? "var(--good)" : gekozenWoord === it.woord ? "var(--accent)" : "var(--border)"};background:${al ? "#c8e6c9" : gekozenWoord === it.woord ? "#fff3cd" : "var(--panel)"};cursor:${al ? "default" : "pointer"};`;
+    if (!al) btn.onclick = () => {
+      oefenStaat.gekozenWoord = it.woord;
+      oefenStaat.gekozenPlaatje = null;
+      render();
+    };
+    woordenCol.appendChild(btn);
+  });
+
+  // Rechts: plaatjes
+  const plaatjesCol = document.createElement("div");
+  plaatjesCol.style.cssText = "display:flex;flex-direction:column;gap:8px;";
+  const plaatjeItems = shuffle(oefenStaat.items.map((it, i) => ({ ...it, idx: i })));
+
+  plaatjesCol.appendChild(document.createElement("div")); // spacer
+  plaatjeItems.forEach(it => {
+    const al = oefenStaat.gekoppeld.find(k => k.plaatje === it.plaatje);
+    const btn = document.createElement("button");
+    btn.textContent = it.plaatje;
+    btn.style.cssText = `font-size:2em;padding:8px;border-radius:10px;border:2px solid ${al ? "var(--good)" : gekozenPlaatje === it.plaatje ? "var(--accent)" : "var(--border)"};background:${al ? "#c8e6c9" : gekozenPlaatje === it.plaatje ? "#fff3cd" : "var(--panel)"};cursor:${al ? "default" : "pointer"};`;
+    if (!al) btn.onclick = () => {
+      if (!oefenStaat.gekozenWoord) return;
+      // Controleer koppeling
+      const juistItem = oefenStaat.items.find(x => x.woord === oefenStaat.gekozenWoord);
+      if (juistItem && juistItem.plaatje === it.plaatje) {
+        oefenStaat.gekoppeld.push({ woord: oefenStaat.gekozenWoord, plaatje: it.plaatje });
+        geluidGoed(instellingen.geluidsEffecten);
+        oefenStaat.goed = (oefenStaat.goed || 0) + 1;
+      } else {
+        geluidFout(instellingen.geluidsEffecten);
+        oefenStaat.foutPogingen++;
+      }
+      oefenStaat.gekozenWoord = null;
+      oefenStaat.gekozenPlaatje = null;
+      render();
+      if (oefenStaat.gekoppeld.length === oefenStaat.items.length) {
+        // Klaar!
+        setTimeout(() => {
+          oefenStaat.goed = oefenStaat.items.length;
+          oefenStaat.fout = oefenStaat.foutPogingen;
+          voltooienOefening();
+        }, 800);
+      }
+    };
+    plaatjesCol.appendChild(btn);
+  });
+
+  container.appendChild(woordenCol);
+  container.appendChild(plaatjesCol);
+  panel.appendChild(container);
+  return panel;
+}
+
+// ====== REEKS ONTHOUDEN ======
+function maakReeksOnthoudenOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.appendChild(maakOefeningHeader("Reeks onthouden"));
+
+  const info = document.createElement("div");
+  info.className = "exercise-info";
+  info.style.justifyContent = "center";
+  info.innerHTML = `Ronde: <strong>${oefenStaat.ronde} / ${oefenStaat.aantalRondes}</strong> &nbsp; Goed: <strong style="color:var(--good)">${oefenStaat.goed}</strong>`;
+  panel.appendChild(info);
+
+  if (oefenStaat.toonFase) {
+    // Toon de reeks
+    const lbl = document.createElement("p");
+    lbl.style.cssText = "text-align:center;font-size:1.1em;color:var(--muted);margin-bottom:12px;";
+    lbl.textContent = "Onthoud deze reeks! Ze verdwijnt zo dadelijk…";
+    panel.appendChild(lbl);
+
+    const reeksDiv = document.createElement("div");
+    reeksDiv.style.cssText = "display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0;";
+    oefenStaat.reeks.forEach(sym => {
+      const s = document.createElement("div");
+      s.style.cssText = "font-size:3em;background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:12px 16px;";
+      s.textContent = sym;
+      reeksDiv.appendChild(s);
+    });
+    panel.appendChild(reeksDiv);
+
+    const timer = document.createElement("p");
+    timer.style.cssText = "text-align:center;color:var(--accent);font-size:1em;";
+    timer.textContent = "Klaar? De reeks verdwijnt na 3 seconden.";
+    panel.appendChild(timer);
+  } else {
+    // Invoerfase
+    const lbl = document.createElement("p");
+    lbl.style.cssText = "text-align:center;font-size:1.1em;margin-bottom:12px;";
+    lbl.textContent = `Klik de reeks in de juiste volgorde (${oefenStaat.ingevoerd.length + 1} van ${oefenStaat.reeks.length}):`;
+    panel.appendChild(lbl);
+
+    // Ingevoerde reeks tonen
+    const ingevoerdDiv = document.createElement("div");
+    ingevoerdDiv.style.cssText = "display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;min-height:60px;";
+    oefenStaat.ingevoerd.forEach(sym => {
+      const s = document.createElement("div");
+      s.style.cssText = "font-size:2em;background:#c8e6c9;border-radius:10px;padding:8px 12px;";
+      s.textContent = sym;
+      ingevoerdDiv.appendChild(s);
+    });
+    panel.appendChild(ingevoerdDiv);
+
+    // Knoppen: alle symbolen in willekeurige volgorde
+    const knoppen = shuffle([...new Set(oefenStaat.reeks)].concat(
+      shuffle(REEKS_DATA[instellingen.moeilijkheid].items).filter(x => !oefenStaat.reeks.includes(x)).slice(0, 2)
+    ));
+    const grid = document.createElement("div");
+    grid.style.cssText = "display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px;";
+    knoppen.forEach(sym => {
+      const btn = document.createElement("button");
+      btn.textContent = sym;
+      btn.style.fontSize = "2em";
+      btn.style.padding = "10px 14px";
+      btn.onclick = () => {
+        oefenStaat.ingevoerd.push(sym);
+        const i = oefenStaat.ingevoerd.length - 1;
+        if (sym !== oefenStaat.reeks[i]) {
+          // Fout
+          geluidFout(instellingen.geluidsEffecten);
+          oefenStaat.fout++;
+          // Toon uitleg en ga door
+          oefenStaat.ingevoerd = [];
+          const fb = document.createElement("div");
+          fb.className = "feedback bad";
+          fb.textContent = `✗ Fout! De reeks was: ${oefenStaat.reeks.join(" → ")}`;
+          panel.appendChild(fb);
+          setTimeout(() => volgendeReeksRonde(), 2000);
+          grid.querySelectorAll("button").forEach(b => b.disabled = true);
+          return;
+        }
+        if (oefenStaat.ingevoerd.length === oefenStaat.reeks.length) {
+          // Helemaal goed!
+          geluidGoed(instellingen.geluidsEffecten);
+          oefenStaat.goed++;
+          const fb = document.createElement("div");
+          fb.className = "feedback good";
+          fb.textContent = `✓ Correct! Goed gedaan!`;
+          panel.appendChild(fb);
+          setTimeout(() => volgendeReeksRonde(), 1500);
+          grid.querySelectorAll("button").forEach(b => b.disabled = true);
+          return;
+        }
+        render();
+      };
+      grid.appendChild(btn);
+    });
+    panel.appendChild(grid);
+  }
+  return panel;
+}
+
+function volgendeReeksRonde() {
+  oefenStaat.ronde++;
+  if (oefenStaat.ronde > oefenStaat.aantalRondes) {
+    oefenStaat.items = [{goed: oefenStaat.goed, fout: oefenStaat.fout}];
+    oefenStaat.index = 0;
+    voltooienOefening();
+    return;
+  }
+  const conf = REEKS_DATA[instellingen.moeilijkheid];
+  oefenStaat.reeks = shuffle(conf.items).slice(0, conf.lengte);
+  oefenStaat.ingevoerd = [];
+  oefenStaat.toonFase = true;
+  render();
+  setTimeout(() => { if (oefenStaat && oefenStaat.toonFase) { oefenStaat.toonFase = false; render(); } }, 3000);
+}
+
+// ====== VOLGORDE ONTHOUDEN (Simon-stijl) ======
+function maakVolgordeOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.appendChild(maakOefeningHeader("Volgorde onthouden"));
+
+  const info = document.createElement("div");
+  info.className = "exercise-info";
+  info.style.justifyContent = "center";
+  info.innerHTML = `Ronde: <strong>${oefenStaat.ronde} / ${oefenStaat.aantalRondes}</strong> &nbsp; Goed: <strong style="color:var(--good)">${oefenStaat.goed}</strong>`;
+  panel.appendChild(info);
+
+  if (oefenStaat.wacht) {
+    const lbl = document.createElement("p");
+    lbl.style.cssText = "text-align:center;font-size:1.1em;color:var(--muted);margin-bottom:16px;";
+    lbl.textContent = "Even wachten…";
+    panel.appendChild(lbl);
+  } else if (oefenStaat.actieveKnop !== null) {
+    const lbl = document.createElement("p");
+    lbl.style.cssText = "text-align:center;font-size:1.1em;color:var(--accent);font-weight:bold;margin-bottom:16px;";
+    lbl.textContent = "Let op de volgorde!";
+    panel.appendChild(lbl);
+  } else {
+    const lbl = document.createElement("p");
+    lbl.style.cssText = "text-align:center;font-size:1.1em;margin-bottom:16px;";
+    lbl.textContent = `Klik de knoppen in dezelfde volgorde (stap ${oefenStaat.ingevoerd.length + 1} van ${oefenStaat.reeks.length}):`;
+    panel.appendChild(lbl);
+  }
+
+  const grid = document.createElement("div");
+  grid.style.cssText = "display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:16px auto;max-width:360px;";
+  oefenStaat.knoppen.forEach((kleur, idx) => {
+    const btn = document.createElement("button");
+    const actief = oefenStaat.actieveKnop === idx;
+    btn.style.cssText = `width:80px;height:80px;border-radius:16px;background:${actief ? "#fff" : kleur};border:4px solid ${kleur};font-size:1.3em;font-weight:bold;color:${actief ? kleur : "#fff"};text-shadow:${actief ? "none" : "0 1px 3px rgba(0,0,0,.5)"};transition:background 0.15s;cursor:${(oefenStaat.wacht || oefenStaat.actieveKnop !== null) ? "default" : "pointer"};`;
+    btn.textContent = oefenStaat.knoppenLabels[idx];
+    if (!oefenStaat.wacht && oefenStaat.actieveKnop === null) {
+      btn.onclick = () => klikVolgordeKnop(idx);
+    }
+    grid.appendChild(btn);
+  });
+  panel.appendChild(grid);
+
+  // Voortgangspunten
+  const punten = document.createElement("div");
+  punten.style.cssText = "display:flex;justify-content:center;gap:8px;margin-top:8px;";
+  for (let i = 0; i < oefenStaat.reeks.length; i++) {
+    const p = document.createElement("div");
+    const kleur = i < oefenStaat.ingevoerd.length ? "var(--good)" : i === oefenStaat.ingevoerd.length ? "var(--accent)" : "var(--border)";
+    p.style.cssText = `width:16px;height:16px;border-radius:50%;background:${kleur};`;
+    punten.appendChild(p);
+  }
+  panel.appendChild(punten);
+  return panel;
+}
+
+function maakVolgordeAnimatie() {
+  if (!oefenStaat) return;
+  let stap = 0;
+  function toonVolgende() {
+    if (stap >= oefenStaat.reeks.length) {
+      oefenStaat.actieveKnop = null;
+      render();
+      return;
+    }
+    oefenStaat.actieveKnop = oefenStaat.reeks[stap];
+    render();
+    setTimeout(() => {
+      oefenStaat.actieveKnop = null;
+      render();
+      stap++;
+      setTimeout(toonVolgende, 400);
+    }, 700);
+  }
+  setTimeout(toonVolgende, 500);
+}
+
+function klikVolgordeKnop(idx) {
+  if (oefenStaat.toonFase || oefenStaat.wacht) return;
+  oefenStaat.ingevoerd.push(idx);
+  const pos = oefenStaat.ingevoerd.length - 1;
+  if (oefenStaat.reeks[pos] !== idx) {
+    // Fout
+    geluidFout(instellingen.geluidsEffecten);
+    oefenStaat.fout++;
+    oefenStaat.wacht = true;
+    const fb = document.createElement("div");
+    fb.className = "feedback bad";
+    fb.textContent = "✗ Fout! Probeer de volgende reeks.";
+    document.querySelector(".panel").appendChild(fb);
+    setTimeout(() => { oefenStaat.wacht = false; volgendeVolgordeRonde(); }, 1800);
+    return;
+  }
+  if (oefenStaat.ingevoerd.length === oefenStaat.reeks.length) {
+    geluidGoed(instellingen.geluidsEffecten);
+    oefenStaat.goed++;
+    oefenStaat.wacht = true;
+    const fb = document.createElement("div");
+    fb.className = "feedback good";
+    fb.textContent = "✓ Correct!";
+    document.querySelector(".panel").appendChild(fb);
+    setTimeout(() => { oefenStaat.wacht = false; volgendeVolgordeRonde(); }, 1500);
+    return;
+  }
+  render();
+}
+
+function volgendeVolgordeRonde() {
+  oefenStaat.ronde++;
+  if (oefenStaat.ronde > oefenStaat.aantalRondes) {
+    oefenStaat.items = [{goed: oefenStaat.goed, fout: oefenStaat.fout}];
+    oefenStaat.index = 0;
+    voltooienOefening();
+    return;
+  }
+  const conf = VOLGORDE_DATA[instellingen.moeilijkheid];
+  oefenStaat.reeks = Array.from({length: conf.reeksLengte}, () => Math.floor(Math.random() * conf.aantalKnoppen));
+  oefenStaat.ingevoerd = [];
+  oefenStaat.actieveKnop = null;
+  oefenStaat.wacht = false;
+  render();
+  setTimeout(() => maakVolgordeAnimatie(), 400);
+}
+
+// ====== STROOP-LIGHT (kleur benoemen) ======
+function genereerStroopVraag() {
+  const woord = STROOP_KLEUREN[Math.floor(Math.random() * STROOP_KLEUREN.length)];
+  // Kleur van de letters is ANDERS dan het woord
+  const andereKleuren = STROOP_KLEUREN.filter(k => k.naam !== woord.naam);
+  const inktKleur = andereKleuren[Math.floor(Math.random() * andereKleuren.length)];
+  oefenStaat.huidig = { woord, inktKleur };
+  oefenStaat.antwoordGegeven = false;
+}
+
+function maakStroopOefening() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.appendChild(maakOefeningHeader("Kleur benoemen"));
+
+  const info = document.createElement("div");
+  info.className = "exercise-info";
+  info.style.justifyContent = "center";
+  info.innerHTML = `Vraag: <strong>${oefenStaat.ronde + 1} / ${oefenStaat.aantalRondes}</strong> &nbsp; Goed: <strong style="color:var(--good)">${oefenStaat.score}</strong>`;
+  panel.appendChild(info);
+
+  const uitleg = document.createElement("p");
+  uitleg.style.cssText = "text-align:center;color:var(--muted);font-size:0.95em;margin-bottom:8px;";
+  uitleg.textContent = "Klik op de KLEUR van de letters — niet wat er staat!";
+  panel.appendChild(uitleg);
+
+  const woordDiv = document.createElement("div");
+  woordDiv.style.cssText = `text-align:center;font-size:4em;font-weight:bold;color:${oefenStaat.huidig.inktKleur.kleur};margin:24px 0;padding:16px;background:var(--panel);border-radius:16px;border:2px solid var(--border);`;
+  woordDiv.textContent = oefenStaat.huidig.woord.naam.toUpperCase();
+  panel.appendChild(woordDiv);
+
+  const vraagLabel = document.createElement("p");
+  vraagLabel.style.cssText = "text-align:center;font-size:1.1em;font-weight:bold;margin-bottom:16px;";
+  vraagLabel.textContent = "Welke kleur zie je?";
+  panel.appendChild(vraagLabel);
+
+  const grid = document.createElement("div");
+  grid.style.cssText = "display:flex;flex-wrap:wrap;gap:12px;justify-content:center;";
+  shuffle([...STROOP_KLEUREN]).forEach(k => {
+    const btn = document.createElement("button");
+    btn.style.cssText = `background:${k.kleur};color:#fff;font-size:1.1em;padding:14px 24px;border-radius:12px;border:none;min-width:100px;text-shadow:0 1px 2px rgba(0,0,0,.4);`;
+    btn.textContent = k.naam;
+    btn.disabled = oefenStaat.antwoordGegeven;
+    btn.onclick = () => {
+      if (oefenStaat.antwoordGegeven) return;
+      oefenStaat.antwoordGegeven = true;
+      const juist = k.naam === oefenStaat.huidig.inktKleur.naam;
+      if (juist) { oefenStaat.score++; geluidGoed(instellingen.geluidsEffecten); }
+      else { oefenStaat.fout++; geluidFout(instellingen.geluidsEffecten); }
+      const fb = document.createElement("div");
+      fb.className = `feedback ${juist ? "good" : "bad"}`;
+      fb.textContent = juist ? `✓ Correct! De inktkleur was ${oefenStaat.huidig.inktKleur.naam}.` : `✗ Nee. De inktkleur was ${oefenStaat.huidig.inktKleur.naam}, niet "${oefenStaat.huidig.woord.naam}".`;
+      panel.appendChild(fb);
+      oefenStaat.ronde++;
+      if (oefenStaat.ronde >= oefenStaat.aantalRondes) {
+        setTimeout(() => {
+          oefenStaat.goed = oefenStaat.score;
+          oefenStaat.items = [{goed: oefenStaat.score}];
+          oefenStaat.index = 0;
+          voltooienOefening();
+        }, 1500);
+      } else {
+        setTimeout(() => { genereerStroopVraag(); render(); }, 1500);
+      }
+    };
+    grid.appendChild(btn);
+  });
+  panel.appendChild(grid);
+  return panel;
+}
+
+// ====== RESULTATEN ======
+function maakResultaten() {
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  const totaal = oefenStaat.goed + oefenStaat.fout;
+  const pct = totaal > 0 ? Math.round((oefenStaat.goed / totaal) * 100) : 0;
+  const tijd = Math.round((Date.now() - oefenStaat.startTijd) / 1000);
+
+  const h = document.createElement("h1");
+  h.textContent = "🎉 Oefening voltooid!";
+  panel.appendChild(h);
+
+  const stats = document.createElement("div");
+  stats.className = "results-stats";
+  stats.innerHTML = `
+    <div class="stat-card"><div class="value">${oefenStaat.goed}</div><div class="label">Goed</div></div>
+    <div class="stat-card"><div class="value">${oefenStaat.fout}</div><div class="label">Fout</div></div>
+    <div class="stat-card"><div class="value">${pct}%</div><div class="label">Score</div></div>
+  `;
+  panel.appendChild(stats);
+
+  const info = document.createElement("p");
+  info.style.textAlign = "center";
+  info.textContent = `Tijd: ${tijd} seconden | Niveau: ${["", "Makkelijk", "Gemiddeld", "Moeilijk"][instellingen.moeilijkheid]}`;
+  panel.appendChild(info);
+
+  const acties = document.createElement("div");
+  acties.style.display = "flex";
+  acties.style.gap = "12px";
+  acties.style.justifyContent = "center";
+  acties.style.marginTop = "24px";
+  acties.style.flexWrap = "wrap";
+
+  const opnieuw = document.createElement("button");
+  opnieuw.className = "primary";
+  opnieuw.textContent = "🔁 Nog een keer";
+  opnieuw.onclick = () => { naarMenu(); startOefening(huidigeOefening); };
+  acties.appendChild(opnieuw);
+
+  const menu = document.createElement("button");
+  menu.textContent = "🏠 Naar menu";
+  menu.onclick = () => naarMenu();
+  acties.appendChild(menu);
+
+  panel.appendChild(acties);
+  return panel;
+}
+
+// ====== PIN ======
+function maakPinModal() {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.style.maxWidth = "400px";
+  modal.style.textAlign = "center";
+
+  modal.innerHTML = `
+    <h2>🔒 Therapeut-toegang</h2>
+    <p>Voer de PIN-code in om instellingen te wijzigen.</p>
+    <input type="password" class="pin-input" id="pinInput" maxlength="6">
+    <p id="pinFout" style="color:var(--warn); height:24px; margin:8px 0"></p>
+  `;
+  const knoppen = document.createElement("div");
+  knoppen.style.display = "flex";
+  knoppen.style.gap = "12px";
+  knoppen.style.justifyContent = "center";
+  knoppen.style.marginTop = "16px";
+
+  const ok = document.createElement("button");
+  ok.className = "primary";
+  ok.textContent = "Open";
+  ok.onclick = checkPin;
+
+  const annu = document.createElement("button");
+  annu.textContent = "Annuleren";
+  annu.onclick = () => { terug(); };
+
+  knoppen.appendChild(ok);
+  knoppen.appendChild(annu);
+  modal.appendChild(knoppen);
+
+  const hint = document.createElement("p");
+  hint.style.marginTop = "16px";
+  hint.style.fontSize = "0.85em";
+  hint.style.color = "var(--muted)";
+  hint.textContent = "Standaard PIN bij eerste keer: 1234";
+  modal.appendChild(hint);
+
+  overlay.appendChild(modal);
+  setTimeout(() => {
+    const inp = document.getElementById("pinInput");
+    if (inp) {
+      inp.focus();
+      inp.onkeydown = (e) => { if (e.key === "Enter") checkPin(); };
+    }
+  }, 50);
+  return overlay;
+}
+
+function checkPin() {
+  const inp = document.getElementById("pinInput");
+  if (!inp) return;
+  if (inp.value === instellingen.pin) {
+    huidigScherm = "instellingen";
+    render();
+  } else {
+    const fout = document.getElementById("pinFout");
+    if (fout) fout.textContent = "Onjuiste PIN-code";
+    inp.value = "";
+  }
+}
+
+// ====== INSTELLINGEN ======
+function maakInstellingenModal() {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  const modal = document.createElement("div");
+  modal.className = "modal";
+
+  const titel = document.createElement("h2");
+  titel.textContent = "⚙️ Instellingen";
+  modal.appendChild(titel);
+
+  const intro = document.createElement("p");
+  intro.style.color = "var(--muted)";
+  intro.style.fontSize = "0.9em";
+  intro.textContent = "Wijzigingen worden automatisch opgeslagen.";
+  modal.appendChild(intro);
+
+  function rij(label, sub, control) {
+    const r = document.createElement("div");
+    r.className = "setting-row";
+    const lab = document.createElement("div");
+    lab.className = "setting-label";
+    lab.innerHTML = `<strong>${label}</strong>${sub ? `<small>${sub}</small>` : ""}`;
+    const ctrl = document.createElement("div");
+    ctrl.className = "setting-control";
+    ctrl.appendChild(control);
+    r.appendChild(lab); r.appendChild(ctrl);
+    return r;
+  }
+
+  const moeilijkSel = document.createElement("select");
+  ["Makkelijk", "Gemiddeld", "Moeilijk"].forEach((l, i) => {
+    const o = document.createElement("option"); o.value = i + 1; o.textContent = l;
+    if (instellingen.moeilijkheid === i + 1) o.selected = true;
+    moeilijkSel.appendChild(o);
+  });
+  moeilijkSel.onchange = (e) => { instellingen.moeilijkheid = parseInt(e.target.value); bewaarInstellingen(instellingen); };
+  modal.appendChild(rij("Moeilijkheidsgraad", "Niveau van de oefeningen", moeilijkSel));
+
+  const tekstSel = document.createElement("select");
+  [["normaal", "Normaal"], ["large", "Groot"], ["xlarge", "Extra groot"]].forEach(([v, l]) => {
+    const o = document.createElement("option"); o.value = v; o.textContent = l;
+    if (instellingen.tekstgrootte === v) o.selected = true;
+    tekstSel.appendChild(o);
+  });
+  tekstSel.onchange = (e) => { instellingen.tekstgrootte = e.target.value; bewaarInstellingen(instellingen); render(); };
+  modal.appendChild(rij("Tekstgrootte", "Voor mensen met visuele beperking", tekstSel));
+
+  modal.appendChild(rij("Hoog contrast", "Zwart-wit voor extra leesbaarheid",
+    maakSwitch(instellingen.hoogContrast, (v) => { instellingen.hoogContrast = v; bewaarInstellingen(instellingen); render(); })));
+
+  modal.appendChild(rij("Spraak (uitspreken)", "Woorden en zinnen worden voorgelezen",
+    maakSwitch(instellingen.spraak, (v) => { instellingen.spraak = v; bewaarInstellingen(instellingen); })));
+
+  modal.appendChild(rij("Geluidseffecten", "Geluid bij goed/fout antwoord",
+    maakSwitch(instellingen.geluidsEffecten, (v) => { instellingen.geluidsEffecten = v; bewaarInstellingen(instellingen); })));
+
+  const tijdSel = document.createElement("select");
+  [[0, "Uit"], [15, "15 seconden"], [30, "30 seconden"], [60, "60 seconden"], [120, "2 minuten"]].forEach(([v, l]) => {
+    const o = document.createElement("option"); o.value = v; o.textContent = l;
+    if (instellingen.tijdsLimiet === v) o.selected = true;
+    tijdSel.appendChild(o);
+  });
+  tijdSel.onchange = (e) => { instellingen.tijdsLimiet = parseInt(e.target.value); bewaarInstellingen(instellingen); };
+  modal.appendChild(rij("Tijdslimiet per vraag", "Tijd voordat vraag wordt overgeslagen", tijdSel));
+
+  modal.appendChild(rij("Automatisch doorgaan", "Volgende vraag verschijnt vanzelf",
+    maakSwitch(instellingen.autoVolgende, (v) => { instellingen.autoVolgende = v; bewaarInstellingen(instellingen); })));
+
+  const vertSel = document.createElement("select");
+  [1, 2, 3, 4, 5].forEach(v => {
+    const o = document.createElement("option"); o.value = v; o.textContent = `${v} seconde${v > 1 ? "n" : ""}`;
+    if (instellingen.autoVolgendeVertraging === v) o.selected = true;
+    vertSel.appendChild(o);
+  });
+  vertSel.onchange = (e) => { instellingen.autoVolgendeVertraging = parseInt(e.target.value); bewaarInstellingen(instellingen); };
+  modal.appendChild(rij("Wachttijd tussen vragen", "Hoe lang feedback zichtbaar blijft", vertSel));
+
+  const aantInp = document.createElement("input");
+  aantInp.type = "number"; aantInp.min = 3; aantInp.max = 30;
+  aantInp.value = instellingen.vragenPerSessie;
+  aantInp.onchange = (e) => {
+    const v = Math.max(3, Math.min(30, parseInt(e.target.value) || 10));
+    instellingen.vragenPerSessie = v; e.target.value = v; bewaarInstellingen(instellingen);
+  };
+  modal.appendChild(rij("Aantal vragen per sessie", "Tussen 3 en 30", aantInp));
+
+  modal.appendChild(rij("Typ-modus", "Bij Welk woord / Zinnen: typen i.p.v. kiezen",
+    maakSwitch(instellingen.typModus, (v) => { instellingen.typModus = v; bewaarInstellingen(instellingen); })));
+
+  modal.appendChild(rij("Foute antwoorden herhalen", "Aan het einde van de sessie",
+    maakSwitch(instellingen.herhaalFouten, (v) => { instellingen.herhaalFouten = v; bewaarInstellingen(instellingen); })));
+
+  modal.appendChild(rij("Voortgang bijhouden", "Resultaten lokaal opslaan",
+    maakSwitch(instellingen.voortgangBijhouden, (v) => { instellingen.voortgangBijhouden = v; bewaarInstellingen(instellingen); })));
+
+  const pinKnop = document.createElement("button");
+  pinKnop.textContent = "🔑 PIN-code wijzigen";
+  pinKnop.onclick = () => {
+    const nieuw = prompt("Nieuwe PIN-code (4-6 cijfers):", instellingen.pin);
+    if (nieuw && /^\d{4,6}$/.test(nieuw)) {
+      instellingen.pin = nieuw; bewaarInstellingen(instellingen);
+      alert("PIN-code gewijzigd.");
+    } else if (nieuw !== null) {
+      alert("PIN moet 4 tot 6 cijfers zijn.");
+    }
+  };
+  const wissenKnop = document.createElement("button");
+  wissenKnop.textContent = "🗑️ Statistieken wissen";
+  wissenKnop.onclick = () => {
+    if (confirm("Alle opgeslagen voortgang verwijderen?")) {
+      localStorage.removeItem("oefenapp_stats");
+      alert("Statistieken gewist.");
+    }
+  };
+  const resetKnop = document.createElement("button");
+  resetKnop.textContent = "↺ Standaardinstellingen";
+  resetKnop.onclick = () => {
+    if (confirm("Alle instellingen terugzetten naar standaard?")) {
+      instellingen = { ...STANDAARD_INSTELLINGEN };
+      bewaarInstellingen(instellingen);
+      render();
+    }
+  };
+
+  const beheerRij = document.createElement("div");
+  beheerRij.style.display = "flex";
+  beheerRij.style.gap = "8px";
+  beheerRij.style.flexWrap = "wrap";
+  beheerRij.style.marginTop = "20px";
+  beheerRij.style.paddingTop = "20px";
+  beheerRij.style.borderTop = "2px solid var(--border)";
+  beheerRij.appendChild(pinKnop);
+  beheerRij.appendChild(wissenKnop);
+  beheerRij.appendChild(resetKnop);
+  modal.appendChild(beheerRij);
+
+  const stats = laadStats();
+  if (stats.sessies && stats.sessies.length > 0) {
+    const statTitel = document.createElement("h3");
+    statTitel.style.marginTop = "24px";
+    statTitel.textContent = "📊 Statistieken";
+    modal.appendChild(statTitel);
+
+    const perType = {};
+    stats.sessies.forEach(s => {
+      perType[s.type] = perType[s.type] || { aantal: 0, goed: 0, fout: 0 };
+      perType[s.type].aantal++;
+      perType[s.type].goed += s.goed || 0;
+      perType[s.type].fout += s.fout || 0;
+    });
+    const labels = {
+      woord: "Welk woord", benoemen: "Benoemen", letterkiezen: "Letter kiezen",
+      letterinvullen: "Letter invullen", lettergreep: "Lettergreep", watpast: "Wat past",
+      watpastniet: "Wat past niet", synoniem: "Synoniem", zinnen: "Zinnen aanvullen",
+      geheugen: "Geheugen", aandacht: "Aandacht", geld: "Geld"
+    };
+    Object.entries(perType).forEach(([type, d]) => {
+      const p = document.createElement("p");
+      p.style.margin = "4px 0";
+      const totaal = d.goed + d.fout;
+      const pct = totaal > 0 ? Math.round((d.goed / totaal) * 100) : 0;
+      p.innerHTML = `<strong>${labels[type] || type}:</strong> ${d.aantal} sessies${totaal > 0 ? `, gemiddeld ${pct}% goed` : ""}`;
+      modal.appendChild(p);
+    });
+  }
+
+  const sluitRij = document.createElement("div");
+  sluitRij.style.marginTop = "24px";
+  sluitRij.style.textAlign = "right";
+  const sluit = document.createElement("button");
+  sluit.className = "primary";
+  sluit.textContent = "Sluiten";
+  sluit.onclick = () => naarMenu();
+  sluitRij.appendChild(sluit);
+  modal.appendChild(sluitRij);
+
+  overlay.appendChild(modal);
+  return overlay;
+}
+
+function maakSwitch(checked, onChange) {
+  const lbl = document.createElement("label");
+  lbl.className = "switch";
+  const inp = document.createElement("input");
+  inp.type = "checkbox"; inp.checked = checked;
+  inp.onchange = (e) => onChange(e.target.checked);
+  const sl = document.createElement("span");
+  sl.className = "slider";
+  lbl.appendChild(inp); lbl.appendChild(sl);
+  return lbl;
+}
+
+// ====== START ======
+render();
+
+</script>
+</body>
+</html>
