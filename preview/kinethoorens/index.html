@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kine Thoorens – Kinesitherapie op afspraak</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --color-primary:    #0F766E;
+      --color-secondary:  #14B8A6;
+      --color-accent:     #0369A1;
+      --color-bg:         #F8FFFE;
+      --color-bg-muted:   #F0FDFA;
+      --color-fg:         #134E4A;
+      --color-fg-muted:   #3D6B68;
+      --color-border:     #CCFBF1;
+      --color-white:      #FFFFFF;
+      --color-navy:       #1A2F4A;
+
+      --font-heading: 'Lexend', sans-serif;
+      --font-body:    'Source Sans 3', sans-serif;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+      --radius-xl:  32px;
+
+      --shadow-sm:  0 1px 3px rgba(15,118,110,.08), 0 1px 2px rgba(15,118,110,.04);
+      --shadow-md:  0 4px 16px rgba(15,118,110,.10), 0 2px 8px rgba(15,118,110,.06);
+      --shadow-lg:  0 16px 48px rgba(15,118,110,.13), 0 6px 20px rgba(15,118,110,.08);
+
+      --transition: 200ms cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; }
+
+    /* ── Skip link (a11y) ── */
+    .skip-link {
+      position: absolute; left: -9999px; top: auto;
+      background: var(--color-primary); color: #fff;
+      padding: 8px 16px; font-size: 14px; z-index: 9999;
+    }
+    .skip-link:focus { left: 16px; top: 16px; }
+
+    /* ── Nav ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(248,255,254,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 clamp(16px, 5vw, 64px);
+    }
+    .nav__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px; gap: 32px;
+    }
+    .nav__logo {
+      display: flex; align-items: center;
+      background: var(--color-navy);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      transition: opacity var(--transition);
+    }
+    .nav__logo:hover { opacity: .85; }
+    .nav__logo img { height: 44px; width: auto; }
+    .nav__logo-svg {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav__links {
+      display: flex; align-items: center; gap: 4px;
+      list-style: none;
+    }
+    .nav__links a {
+      padding: 8px 14px; border-radius: var(--radius-sm);
+      font-size: 15px; font-weight: 500;
+      color: var(--color-fg-muted);
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav__links a:hover {
+      color: var(--color-primary);
+      background: var(--color-bg-muted);
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 24px; border-radius: var(--radius-xl);
+      font-size: 15px; font-weight: 600; font-family: var(--font-heading);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .btn--primary {
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(15,118,110,.3);
+    }
+    .btn--primary:hover {
+      background: #0b635c;
+      box-shadow: 0 4px 16px rgba(15,118,110,.4);
+      transform: translateY(-1px);
+    }
+    .btn--outline {
+      background: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+    .btn--outline:hover {
+      background: var(--color-bg-muted);
+      transform: translateY(-1px);
+    }
+    .btn--lg { padding: 15px 32px; font-size: 17px; border-radius: var(--radius-xl); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: clamp(64px, 10vw, 120px) clamp(16px, 5vw, 64px) clamp(48px, 8vw, 96px);
+      background: linear-gradient(135deg, #F0FDFA 0%, #E6F7F5 40%, #EEF9FF 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(20,184,166,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 80px); align-items: center;
+    }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(15,118,110,.08); color: var(--color-primary);
+      border: 1px solid rgba(15,118,110,.15);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 13px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero__eyebrow-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--color-secondary); flex-shrink: 0;
+    }
+    .hero__title {
+      font-family: var(--font-heading);
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 700; line-height: 1.1;
+      color: var(--color-navy); margin-bottom: 20px;
+      letter-spacing: -.02em;
+    }
+    .hero__title span { color: var(--color-primary); }
+    .hero__subtitle {
+      font-size: clamp(17px, 2vw, 20px);
+      color: var(--color-fg-muted);
+      max-width: 480px; margin-bottom: 36px; line-height: 1.6;
+    }
+    .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
+    .hero__trust {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .hero__trust-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500; color: var(--color-fg-muted);
+    }
+    .hero__trust-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(15,118,110,.1);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero__image-wrap {
+      position: relative;
+    }
+    .hero__image-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      aspect-ratio: 4/3;
+      background: #D0EDE9;
+    }
+    .hero__image-card img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero__badge {
+      position: absolute; bottom: -16px; left: -16px;
+      background: #fff; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero__badge-icon {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: var(--color-primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero__badge-label { font-size: 13px; color: var(--color-fg-muted); }
+    .hero__badge-value { font-size: 15px; font-weight: 700; color: var(--color-navy); line-height: 1.2; }
+
+    /* ── Section helpers ── */
+    .section {
+      padding: clamp(56px, 8vw, 96px) clamp(16px, 5vw, 64px);
+    }
+    .section--muted { background: var(--color-bg-muted); }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section__eyebrow {
+      font-size: 13px; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--color-secondary);
+      margin-bottom: 10px;
+    }
+    .section__title {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700; line-height: 1.15;
+      color: var(--color-navy); margin-bottom: 16px;
+      letter-spacing: -.02em;
+    }
+    .section__desc {
+      font-size: 18px; color: var(--color-fg-muted);
+      max-width: 560px; line-height: 1.65;
+    }
+    .section__header { margin-bottom: clamp(32px, 5vw, 56px); }
+    .section__header--center { text-align: center; }
+    .section__header--center .section__desc { margin: 0 auto; }
+
+    /* ── Services grid ── */
+    .services__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .service-card {
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: pointer;
+    }
+    .service-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+    .service-card__image {
+      aspect-ratio: 4/3; overflow: hidden;
+    }
+    .service-card__image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 300ms ease;
+    }
+    .service-card:hover .service-card__image img {
+      transform: scale(1.04);
+    }
+    .service-card__body { padding: 20px 22px 24px; }
+    .service-card__icon {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: var(--color-bg-muted);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .service-card__title {
+      font-family: var(--font-heading);
+      font-size: 18px; font-weight: 600;
+      color: var(--color-navy); margin-bottom: 8px;
+    }
+    .service-card__desc {
+      font-size: 14px; color: var(--color-fg-muted); line-height: 1.6;
+    }
+    .service-card__link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px; font-size: 14px; font-weight: 600;
+      color: var(--color-primary);
+      transition: gap var(--transition);
+    }
+    .service-card:hover .service-card__link { gap: 10px; }
+
+    /* ── About ── */
+    .about__inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 6vw, 80px); align-items: center;
+    }
+    .about__image-wrap { position: relative; }
+    .about__image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      aspect-ratio: 4/3;
+    }
+    .about__image img { width: 100%; height: 100%; object-fit: cover; }
+    .about__accent {
+      position: absolute; top: -20px; right: -20px;
+      width: 120px; height: 120px;
+      border-radius: var(--radius-lg);
+      background: var(--color-primary);
+      opacity: .12;
+      z-index: -1;
+    }
+    .about__quote {
+      position: absolute; bottom: 20px; left: -24px;
+      background: #fff; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md); padding: 14px 18px;
+      max-width: 220px; font-size: 13px; line-height: 1.5;
+    }
+    .about__quote-name { font-weight: 700; color: var(--color-navy); margin-bottom: 2px; }
+    .about__quote-role { color: var(--color-fg-muted); }
+    .about__text p {
+      font-size: 16px; color: var(--color-fg-muted);
+      line-height: 1.75; margin-bottom: 16px;
+    }
+    .about__text p:last-child { margin-bottom: 0; }
+    .about__creds {
+      display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0;
+    }
+    .about__cred {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--color-bg-muted);
+      border: 1px solid var(--color-border);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 13px; font-weight: 500; color: var(--color-fg);
+    }
+
+    /* ── Service Detail ── */
+    .service-detail {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 6vw, 80px); align-items: center;
+      padding: clamp(48px, 7vw, 80px) clamp(16px, 5vw, 64px);
+    }
+    .service-detail + .service-detail { border-top: 1px solid var(--color-border); }
+    .service-detail--reverse .service-detail__image { order: 2; }
+    .service-detail--reverse .service-detail__content { order: 1; }
+    .service-detail__inner { max-width: 1200px; margin: 0 auto; }
+    .service-detail__image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      aspect-ratio: 4/3;
+    }
+    .service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
+    .service-detail__tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(15,118,110,.08); color: var(--color-primary);
+      border-radius: 100px; padding: 4px 12px;
+      font-size: 12px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .service-detail__title {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 700; color: var(--color-navy);
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .service-detail__desc {
+      font-size: 16px; color: var(--color-fg-muted); line-height: 1.75;
+    }
+
+    /* ── Contact strip ── */
+    .contact-strip {
+      background: var(--color-navy);
+      padding: clamp(48px, 7vw, 80px) clamp(16px, 5vw, 64px);
+    }
+    .contact-strip__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .contact-strip__title {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 700; color: #fff;
+      line-height: 1.2; margin-bottom: 8px;
+    }
+    .contact-strip__sub { font-size: 16px; color: rgba(255,255,255,.65); }
+    .contact-strip .btn--primary {
+      background: var(--color-secondary);
+      box-shadow: 0 4px 20px rgba(20,184,166,.35);
+      white-space: nowrap;
+    }
+    .contact-strip .btn--primary:hover {
+      background: #0d9488;
+    }
+
+    /* ── Info cards ── */
+    .info-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .info-card {
+      background: #fff; border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .info-card__icon {
+      width: 48px; height: 48px; border-radius: var(--radius-sm);
+      background: var(--color-bg-muted);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .info-card__title {
+      font-family: var(--font-heading);
+      font-size: 16px; font-weight: 600; color: var(--color-navy);
+      margin-bottom: 6px;
+    }
+    .info-card__desc { font-size: 15px; color: var(--color-fg-muted); line-height: 1.55; }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--color-navy);
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding: clamp(40px, 6vw, 64px) clamp(16px, 5vw, 64px) 32px;
+    }
+    .footer__inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .footer__top {
+      display: flex; justify-content: space-between; flex-wrap: wrap;
+      gap: 40px; margin-bottom: 48px;
+    }
+    .footer__brand { max-width: 300px; }
+    .footer__brand-logo {
+      display: inline-flex; background: rgba(255,255,255,.05);
+      border-radius: var(--radius-sm); padding: 6px 10px; margin-bottom: 16px;
+    }
+    .footer__tagline { font-size: 14px; color: rgba(255,255,255,.55); line-height: 1.6; }
+    .footer__col h4 {
+      font-family: var(--font-heading);
+      font-size: 13px; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: rgba(255,255,255,.4);
+      margin-bottom: 16px;
+    }
+    .footer__col ul { list-style: none; }
+    .footer__col li + li { margin-top: 10px; }
+    .footer__col a {
+      font-size: 14px; color: rgba(255,255,255,.7);
+      transition: color var(--transition);
+    }
+    .footer__col a:hover { color: var(--color-secondary); }
+    .footer__divider {
+      border: none; border-top: 1px solid rgba(255,255,255,.08);
+      margin-bottom: 24px;
+    }
+    .footer__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+      font-size: 13px; color: rgba(255,255,255,.35);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero__inner,
+      .about__inner { grid-template-columns: 1fr; }
+      .hero__image-wrap { order: -1; }
+      .hero__badge { display: none; }
+      .service-detail {
+        grid-template-columns: 1fr;
+        padding: 40px clamp(16px, 5vw, 32px);
+      }
+      .service-detail--reverse .service-detail__image,
+      .service-detail--reverse .service-detail__content { order: unset; }
+      .contact-strip__inner { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 640px) {
+      .nav__links { display: none; }
+      .hero__actions { flex-direction: column; }
+      .hero__actions .btn { width: 100%; justify-content: center; }
+      .footer__top { flex-direction: column; }
+    }
+
+    /* ── SVG icons inline ── */
+    svg { display: inline-block; vertical-align: middle; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Ga naar hoofdinhoud</a>
+
+<!-- ═══════════ NAV ═══════════ -->
+<header>
+  <nav class="nav" aria-label="Hoofdnavigatie">
+    <div class="nav__inner">
+      <!-- ORIGINAL LOGO (kept exactly as-is in style) -->
+      <a href="#" class="nav__logo" aria-label="Kine Thoorens – terug naar home">
+        <div class="nav__logo-svg">
+          <!-- Spine icon SVG (matches brand) -->
+          <svg width="22" height="36" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="11" cy="4.5" rx="5.5" ry="4.5" fill="#14B8A6"/>
+            <rect x="8.5" y="10" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="17" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="24" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="31" width="5" height="4" rx="2" fill="#14B8A6" opacity=".6"/>
+            <line x1="11" y1="9" x2="11" y2="10" stroke="#14B8A6" stroke-width="1.5"/>
+            <line x1="11" y1="16" x2="11" y2="17" stroke="#14B8A6" stroke-width="1.5"/>
+            <line x1="11" y1="23" x2="11" y2="24" stroke="#14B8A6" stroke-width="1.5"/>
+            <line x1="11" y1="30" x2="11" y2="31" stroke="#14B8A6" stroke-width="1.5"/>
+          </svg>
+          <div>
+            <div style="font-family:'Lexend',sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:.05em;">KINE</div>
+            <div style="font-family:'Lexend',sans-serif;font-size:11px;font-weight:400;color:#14B8A6;letter-spacing:.12em;">THOORENS</div>
+          </div>
+        </div>
+      </a>
+
+      <ul class="nav__links" role="list">
+        <li><a href="#diensten">Diensten</a></li>
+        <li><a href="#over-ons">Over ons</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <a href="tel:+32475665863" class="btn btn--primary" style="font-size:14px;padding:10px 20px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+        Afspraak Maken
+      </a>
+    </div>
+  </nav>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main id="main">
+
+  <!-- ── HERO ── -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__inner container">
+      <div class="hero__content">
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+          Enkel op afspraak
+        </div>
+        <h1 class="hero__title" id="hero-title">
+          Professionele<br><span>kinesitherapie</span><br>op maat
+        </h1>
+        <p class="hero__subtitle">
+          Persoonlijke en doelgerichte behandeling voor een duurzame aanpak van uw klachten. Afgestudeerd UGent, gespecialiseerd in manuele therapie &amp; dry needling.
+        </p>
+        <div class="hero__actions">
+          <a href="tel:+32475665863" class="btn btn--primary btn--lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            Afspraak Maken
+          </a>
+          <a href="#diensten" class="btn btn--outline btn--lg">Onze diensten</a>
+        </div>
+        <div class="hero__trust" role="list">
+          <div class="hero__trust-item" role="listitem">
+            <div class="hero__trust-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            Afgestudeerd UGent 2018
+          </div>
+          <div class="hero__trust-item" role="listitem">
+            <div class="hero__trust-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            Postgraduaat Manuele Therapie
+          </div>
+          <div class="hero__trust-item" role="listitem">
+            <div class="hero__trust-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            Flexibele uren
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__image-wrap">
+        <div class="hero__image-card">
+          <img
+            src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
+            alt="Kinesitherapeut behandelt een patiënt in een moderne praktijkruimte"
+            loading="eager"
+          />
+        </div>
+        <div class="hero__badge" aria-label="Persoonlijke aanpak">
+          <div class="hero__badge-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div>
+            <div class="hero__badge-value">Persoonlijke aanpak</div>
+            <div class="hero__badge-label">Uitgebreid intake gesprek</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INFO STRIP ── -->
+  <section class="section section--muted" aria-label="Praktische informatie">
+    <div class="container">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+          </div>
+          <div class="info-card__title">Telefonisch bereikbaar</div>
+          <div class="info-card__desc">0475 66 58 63<br>Bel voor een afspraak</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="info-card__title">Op afspraak</div>
+          <div class="info-card__desc">Enkel op afspraak<br>Flexibele tijdstippen</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="info-card__title">Locatie</div>
+          <div class="info-card__desc">Kinethoorens.be<br>Eigen praktijkruimte</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="info-card__title">Erkend kinesitherapeut</div>
+          <div class="info-card__desc">Terugbetaling via<br>uw mutualiteit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SERVICES ── -->
+  <section class="section" id="diensten" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section__header section__header--center">
+        <div class="section__eyebrow">Onze diensten</div>
+        <h2 class="section__title" id="services-title">Wat kunnen wij voor u doen?</h2>
+        <p class="section__desc">Van algemene kinesitherapie tot gespecialiseerde technieken — een aanpak op maat voor élke klacht.</p>
+      </div>
+
+      <div class="services__grid">
+        <!-- Algemene Kinesitherapie -->
+        <article class="service-card" tabindex="0">
+          <div class="service-card__image">
+            <img
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=75"
+              alt="Kinesitherapeut behandelt knie van een patiënt op behandeltafel"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+            </div>
+            <h3 class="service-card__title">Algemene Kinesitherapie</h3>
+            <p class="service-card__desc">Behandeling van spierproblemen, gewrichtsklachten, revalidatie na blessures en operaties.</p>
+            <span class="service-card__link" aria-label="Meer over algemene kinesitherapie">
+              Meer lezen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </article>
+
+        <!-- Manuele Therapie -->
+        <article class="service-card" tabindex="0">
+          <div class="service-card__image">
+            <img
+              src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=75"
+              alt="Manuele therapie behandeling van rug en schouder"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+            </div>
+            <h3 class="service-card__title">Manuele Therapie</h3>
+            <p class="service-card__desc">Postgraduaat-opleiding voor geavanceerde behandeling van gewrichten, wervelkolom en omliggende structuren.</p>
+            <span class="service-card__link" aria-label="Meer over manuele therapie">
+              Meer lezen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </article>
+
+        <!-- Dry Needling -->
+        <article class="service-card" tabindex="0">
+          <div class="service-card__image">
+            <img
+              src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=75"
+              alt="Dry needling behandeling met acupunctuurnaaldjes op spierpunten"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3 class="service-card__title">Dry Needling</h3>
+            <p class="service-card__desc">Gericht inbrengen van naalden in triggerpoints om spierspanning te verminderen en pijn te verlichten.</p>
+            <span class="service-card__link" aria-label="Meer over dry needling">
+              Meer lezen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </article>
+
+        <!-- Lactaattesten -->
+        <article class="service-card" tabindex="0">
+          <div class="service-card__image">
+            <img
+              src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=600&q=75"
+              alt="Atleet loopt op atletiekpiste voor lactaattest"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3 class="service-card__title">Lactaattesten</h3>
+            <p class="service-card__desc">Sportspecifieke lactaatdrempeltest voor sporters die hun trainingsintensiteit optimaal willen afstemmen.</p>
+            <span class="service-card__link" aria-label="Meer over lactaattesten">
+              Meer lezen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SERVICE DETAIL: Algemene Kinesitherapie ── -->
+  <div style="background:var(--color-bg-muted)">
+    <div class="container">
+      <div class="service-detail" aria-labelledby="detail-kine-title">
+        <div class="service-detail__image">
+          <img
+            src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80"
+            alt="Kinesitherapie behandeling van knie"
+            loading="lazy"
+          />
+        </div>
+        <div class="service-detail__content">
+          <span class="service-detail__tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+            Dienst
+          </span>
+          <h2 class="service-detail__title" id="detail-kine-title">Algemene kinesitherapie</h2>
+          <p class="service-detail__desc">Of het nu gaat om sportblessures, rugpijn, schouderklachten of revalidatie na een operatie — een persoonlijk behandelplan staat altijd centraal. We starten met een uitgebreid gesprek om uw klachten in kaart te brengen en kiezen dan de meest geschikte technieken.</p>
+        </div>
+      </div>
+
+      <div class="service-detail service-detail--reverse" style="border-top:1px solid var(--color-border)" aria-labelledby="detail-manueel-title">
+        <div class="service-detail__image">
+          <img
+            src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80"
+            alt="Manuele therapie behandeling"
+            loading="lazy"
+          />
+        </div>
+        <div class="service-detail__content">
+          <span class="service-detail__tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+            Gespecialiseerd
+          </span>
+          <h2 class="service-detail__title" id="detail-manueel-title">Manuele Therapie</h2>
+          <p class="service-detail__desc">Met een postgraduaat Manuele Therapie bieden we geavanceerde hands-on behandelingen voor gewrichten en de wervelkolom. Deze techniek is bijzonder effectief bij nek- en rugklachten, hoofdpijn van cervicale oorsprong en gewrichtsblokkeringen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ── -->
+  <section class="section" id="over-ons" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about__inner">
+        <div class="about__image-wrap">
+          <div class="about__accent" aria-hidden="true"></div>
+          <div class="about__image">
+            <img
+              src="https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?w=800&q=80"
+              alt="Gevel van de praktijk Kine Thoorens met uithangbord"
+              loading="lazy"
+            />
+          </div>
+          <div class="about__quote" aria-label="Matthias Thoorens, kinesitherapeut">
+            <div class="about__quote-name">Matthias Thoorens</div>
+            <div class="about__quote-role">Erkend kinesitherapeut · UGent 2018</div>
+          </div>
+        </div>
+        <div>
+          <div class="section__eyebrow">Over ons</div>
+          <h2 class="section__title" id="about-title">Wie is Matthias?</h2>
+          <div class="about__creds" role="list">
+            <span class="about__cred" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Afgestudeerd UGent 2018
+            </span>
+            <span class="about__cred" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Postgraduaat Manuele Therapie
+            </span>
+            <span class="about__cred" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Dry Needling gecertificeerd
+            </span>
+            <span class="about__cred" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Ervaren wielrenner &amp; sportfanaat
+            </span>
+          </div>
+          <div class="about__text">
+            <p>Ik ben Matthias, afgestudeerd in 2018 aan UGent. Na mijn studies heb ik vrij snel dry needling bijgestudeerd en later behaalde ik het postgraduaat Manuele Therapie.</p>
+            <p>Omdat ik het belangrijk vind om een persoonlijke en doelgerichte aanpak te hanteren, begin ik graag met een uitgebreid gesprek om een beter inzicht te krijgen in uw klachten. Van daaruit kijken we welke behandelmogelijkheden het beste passen om de klacht zo duurzaam mogelijk aan te pakken.</p>
+            <p>Naast de praktijk ben ik gepassioneerd wielrenner. Deze passie heeft er toe geleid dat ik me verder verdiept heb in trainingsleer en lactaattesten. Ik kijk ernaar uit u te ontmoeten in de praktijk.</p>
+          </div>
+          <div style="margin-top:28px">
+            <a href="tel:+32475665863" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+              Maak een afspraak
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA STRIP ── -->
+  <section class="contact-strip" id="contact" aria-labelledby="cta-title">
+    <div class="contact-strip__inner">
+      <div>
+        <h2 class="contact-strip__title" id="cta-title">Klaar om uw klachten aan te pakken?</h2>
+        <p class="contact-strip__sub">Bel ons of stuur een bericht — we plannen snel een afspraak in.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <a href="tel:+32475665863" class="btn btn--primary btn--lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+          0475 66 58 63
+        </a>
+        <div style="color:rgba(255,255,255,.5);font-size:14px">Enkel op afspraak</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer" aria-label="Footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__brand-logo">
+          <svg width="18" height="28" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="11" cy="4.5" rx="5.5" ry="4.5" fill="#14B8A6"/>
+            <rect x="8.5" y="10" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="17" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="24" width="5" height="5" rx="2" fill="#14B8A6"/>
+            <rect x="8.5" y="31" width="5" height="4" rx="2" fill="#14B8A6" opacity=".6"/>
+          </svg>
+          <span style="font-family:'Lexend',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-left:8px;">KINE THOORENS</span>
+        </div>
+        <p class="footer__tagline">Professionele kinesitherapie op maat. Persoonlijk, doelgericht en duurzaam.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Diensten</h4>
+        <ul>
+          <li><a href="#diensten">Algemene Kinesitherapie</a></li>
+          <li><a href="#diensten">Manuele Therapie</a></li>
+          <li><a href="#diensten">Dry Needling</a></li>
+          <li><a href="#diensten">Lactaattesten</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+32475665863">0475 66 58 63</a></li>
+          <li><a href="#over-ons">Over Matthias</a></li>
+          <li><a href="#contact">Afspraak maken</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer__divider" />
+    <div class="footer__bottom">
+      <span>© 2024 Kine Thoorens. Alle rechten voorbehouden.</span>
+      <span>Erkend kinesitherapeut · RIZIV terugbetaling</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
