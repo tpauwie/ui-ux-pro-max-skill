@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>De Methode — Character First</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .page-hero { padding: 88px 7% 48px; background: var(--mist); border-bottom: 1px solid var(--line); }
+  .page-hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 12px; }
+  .page-hero p { color: var(--stone); font-size: 1rem; max-width: 540px; line-height: 1.7; }
+
+  /* PILLARS */
+  .method-grid { padding: 56px 7%; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-bottom: 1px solid var(--line); }
+  .method-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+  .method-card .mc-num { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 2.4rem; color: rgba(240,90,40,.2); line-height: 1; margin-bottom: 12px; }
+  .method-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .method-card p { font-size: .9rem; color: var(--stone); line-height: 1.7; }
+
+  /* VALUES */
+  .values-section { padding: 56px 7%; background: var(--ink); color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .values-section .sec-sub { color: #aab4c6; }
+  .val-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .val-item { border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 24px 20px; }
+  .val-item .vi-icon { font-size: 22px; margin-bottom: 10px; }
+  .val-item .vi-title { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: .95rem; color: #fff; margin-bottom: 6px; }
+  .val-item .vi-text { font-size: .83rem; color: #8893a6; line-height: 1.6; }
+
+  /* QUOTE */
+  .quote-strip { padding: 56px 7%; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 40px; }
+  .quote-strip blockquote { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: clamp(1.2rem, 2.5vw, 1.8rem); line-height: 1.3; color: var(--ink); }
+  .quote-strip blockquote em { font-style: normal; color: var(--ignite); }
+  .quote-strip .qs-line { width: 4px; height: 80px; background: var(--ignite); border-radius: 2px; flex-shrink: 0; }
+
+  @media(max-width: 760px) {
+    .method-grid { grid-template-columns: 1fr; }
+    .val-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media(max-width: 480px) {
+    .val-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="#1C2433"/>
+    <path d="M10 78 L50 14 L90 78 Z" fill="#F05A28"/>
+    <path d="M50 14 L36 38 L50 31 L64 38 Z" fill="#FAF7F2"/>
+    <text x="50" y="96" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Arial Black,sans-serif" font-weight="900" font-size="14" fill="#fff" letter-spacing="3">CF</text>
+  </symbol>
+</svg>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="logo-mark"><use href="#mark"/></svg>
+    <span class="wm-text">CHARACTER <span>First</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="methode.html" class="active">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="aanbod.html" class="nav-cta">Bekijk aanbod</a>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">De methode</div>
+  <h1>Karakter train je.<br>Net zoals techniek.</h1>
+  <p>Character First is gebaseerd op inzichten uit positieve psychologie, sportpsychologie en ervaringsgericht leren. Geen motivatiepraat — een gestructureerd, herhaalbaar systeem.</p>
+</div>
+
+<div class="method-grid">
+  <div class="method-card">
+    <div class="mc-num">01</div>
+    <h3>Ervaringsgericht leren</h3>
+    <p>Sporters leren niet via lessen of presentaties. We werken via gerichte oefeningen, situaties en reflectiemomenten op en naast het veld. Leren door te doen, met bewuste naverwerking.</p>
+  </div>
+  <div class="method-card">
+    <div class="mc-num">02</div>
+    <h3>Gestructureerde thema's</h3>
+    <p>Het programma werkt met 7 thema's: zelfkennis, druk & stress, communicatie, mijn rol, team eerst, veerkracht en leiderschap. Elk thema heeft concrete oefeningen en inzichten.</p>
+  </div>
+  <div class="method-card">
+    <div class="mc-num">03</div>
+    <h3>De coach als sleutelfiguur</h3>
+    <p>Karakterontwikkeling werkt enkel als de coach het draagt. Wij richten ons evenveel op de begeleider als op de speler. Coaches krijgen tools, taal en vertrouwen.</p>
+  </div>
+  <div class="method-card">
+    <div class="mc-num">04</div>
+    <h3>Continuïteit boven eenmaligheid</h3>
+    <p>Karakter groeit traag. Eén sessie helpt — maar een traject doorheen het seizoen verankert gedrag. Wij ontwerpen trajecten die aansluiten bij de sportkalender.</p>
+  </div>
+</div>
+
+<div class="quote-strip">
+  <div class="qs-line"></div>
+  <blockquote>"Sport is het <em>perfecte podium</em> om levenswaarden te ontwikkelen. Wij maken dat bewust en herhaalbaar."</blockquote>
+</div>
+
+<div class="values-section">
+  <div class="eyebrow" style="color:var(--ignite)">Onze waarden</div>
+  <h2 class="sec-title" style="color:#fff">Waar we voor staan</h2>
+  <p class="sec-sub">Elke keuze in ons programma vertrekt vanuit vier kernwaarden.</p>
+  <div class="val-grid">
+    <div class="val-item">
+      <div class="vi-icon">🔥</div>
+      <div class="vi-title">Moedig</div>
+      <div class="vi-text">We dagen uit en vermijden de comfortzone niet. Groei vraagt lef.</div>
+    </div>
+    <div class="val-item">
+      <div class="vi-icon">🌱</div>
+      <div class="vi-title">Groeigericht</div>
+      <div class="vi-text">Vooruitgang boven perfectie. De mens van morgen telt.</div>
+    </div>
+    <div class="val-item">
+      <div class="vi-icon">🎯</div>
+      <div class="vi-title">Onderbouwd</div>
+      <div class="vi-text">Geen hype, wel wetenschap. Elke oefening heeft een fundament.</div>
+    </div>
+    <div class="val-item">
+      <div class="vi-icon">🤝</div>
+      <div class="vi-title">Samen</div>
+      <div class="vi-text">De sterkste speler maakt het team sterker, niet zichzelf.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="fl">Character <span>First</span></span>
+  <nav>
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <span>© 2026 characterfirst.be</span>
+</footer>
+</body>
+</html>
