@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact — Character First</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .contact-wrap {
+    min-height: calc(100vh - 60px); padding-top: 60px;
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .contact-left {
+    background: var(--ink); color: #fff;
+    padding: 64px 52px 64px 7%;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .contact-left .eyebrow { color: var(--ignite); }
+  .contact-left h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: #fff; margin-bottom: 16px; }
+  .contact-left p { color: #aab4c6; font-size: .95rem; line-height: 1.75; margin-bottom: 36px; max-width: 380px; }
+  .contact-detail { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .contact-detail .cd-icon { width: 36px; height: 36px; background: rgba(240,90,40,.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .contact-detail .cd-text { font-size: .9rem; color: #aab4c6; }
+  .contact-detail .cd-text strong { display: block; color: #fff; font-size: .85rem; margin-bottom: 1px; }
+
+  .contact-right { padding: 64px 7% 64px 52px; display: flex; flex-direction: column; justify-content: center; background: var(--canvas); }
+  .contact-right h2 { font-size: 1.4rem; margin-bottom: 28px; }
+
+  form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  label { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 5px; display: block; }
+  input, textarea, select {
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--line);
+    border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--ink); background: #fff; outline: none;
+    transition: border-color .15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--ignite); }
+  textarea { resize: vertical; min-height: 110px; }
+  .form-submit { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
+  .form-submit p { font-size: 12px; color: var(--stone); line-height: 1.5; }
+
+  @media(max-width: 768px) {
+    .contact-wrap { grid-template-columns: 1fr; }
+    .contact-left { padding: 48px 7%; }
+    .contact-right { padding: 48px 7%; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="#1C2433"/>
+    <path d="M10 78 L50 14 L90 78 Z" fill="#F05A28"/>
+    <path d="M50 14 L36 38 L50 31 L64 38 Z" fill="#FAF7F2"/>
+    <text x="50" y="96" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Arial Black,sans-serif" font-weight="900" font-size="14" fill="#fff" letter-spacing="3">CF</text>
+  </symbol>
+</svg>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="logo-mark"><use href="#mark"/></svg>
+    <span class="wm-text">CHARACTER <span>First</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <a href="aanbod.html" class="nav-cta">Bekijk aanbod</a>
+</nav>
+
+<div class="contact-wrap">
+  <div class="contact-left">
+    <div class="eyebrow">Contact</div>
+    <h1>Laten we kennismaken.</h1>
+    <p>Heb je een vraag over het aanbod, wil je een traject starten of gewoon meer weten? Stuur een bericht — we antworden binnen 48 uur.</p>
+    <div class="contact-detail">
+      <div class="cd-icon">📍</div>
+      <div class="cd-text"><strong>Locatie</strong>België</div>
+    </div>
+    <div class="contact-detail">
+      <div class="cd-icon">✉️</div>
+      <div class="cd-text"><strong>E-mail</strong>info@characterfirst.be</div>
+    </div>
+  </div>
+
+  <div class="contact-right">
+    <h2>Stuur een bericht</h2>
+    <form onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div>
+          <label for="naam">Naam</label>
+          <input type="text" id="naam" placeholder="Jouw naam" required/>
+        </div>
+        <div>
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="jouw@email.be" required/>
+        </div>
+      </div>
+      <div>
+        <label for="context">Jouw context</label>
+        <select id="context">
+          <option value="">Selecteer...</option>
+          <option>Coach</option>
+          <option>Club / Bestuur</option>
+          <option>Speler / Ouder</option>
+          <option>Andere</option>
+        </select>
+      </div>
+      <div>
+        <label for="bericht">Bericht</label>
+        <textarea id="bericht" placeholder="Wat wil je weten of bespreken?" required></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-primary">Verstuur bericht</button>
+        <p>We bewaren je gegevens enkel om je vraag te beantwoorden.</p>
+      </div>
+      <p id="success" style="display:none;color:var(--growth);font-weight:600;font-size:.9rem">✓ Bericht verstuurd — we nemen snel contact op.</p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span class="fl">Character <span>First</span></span>
+  <nav>
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <span>© 2026 characterfirst.be</span>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('success').style.display = 'block';
+    e.target.reset();
+  }
+</script>
+</body>
+</html>

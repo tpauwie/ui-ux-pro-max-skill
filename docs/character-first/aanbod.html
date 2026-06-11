@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aanbod — Character First</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .page-hero { padding: 88px 7% 48px; background: var(--ink); color: #fff; }
+  .page-hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 12px; }
+  .page-hero p { color: #aab4c6; font-size: 1rem; max-width: 520px; line-height: 1.7; }
+
+  .services { padding: 56px 7%; display: flex; flex-direction: column; gap: 24px; }
+  .service-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    display: grid; grid-template-columns: 280px 1fr; overflow: hidden;
+  }
+  .service-card .sc-left {
+    padding: 36px 32px; border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .service-card .sc-icon { font-size: 28px; margin-bottom: 4px; }
+  .service-card .sc-title { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 1.3rem; line-height: 1.2; }
+  .service-card .sc-tag {
+    display: inline-block; font-family: 'Archivo', sans-serif; font-weight: 700;
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ignite); background: rgba(240,90,40,.1); padding: 4px 10px; border-radius: 20px;
+  }
+  .service-card .sc-right { padding: 36px 36px; }
+  .service-card .sc-right p { font-size: .95rem; color: var(--stone); line-height: 1.75; margin-bottom: 20px; }
+  .feature-list { display: flex; flex-direction: column; gap: 8px; }
+  .feature-list li {
+    list-style: none; font-size: .9rem; color: var(--ink-soft);
+    padding-left: 22px; position: relative; line-height: 1.5;
+  }
+  .feature-list li::before { content: "→"; position: absolute; left: 0; color: var(--ignite); font-weight: 700; }
+
+  .cta-strip { padding: 56px 7%; background: var(--ignite); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .cta-strip h2 { font-size: 1.6rem; color: #fff; }
+  .cta-strip p { color: rgba(255,255,255,.85); font-size: .95rem; margin-top: 4px; }
+  .btn-white { background: #fff; color: var(--ignite); font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 14px; padding: 12px 24px; border-radius: 7px; text-decoration: none; }
+
+  @media(max-width: 760px) {
+    .service-card { grid-template-columns: 1fr; }
+    .service-card .sc-left { border-right: none; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="#1C2433"/>
+    <path d="M10 78 L50 14 L90 78 Z" fill="#F05A28"/>
+    <path d="M50 14 L36 38 L50 31 L64 38 Z" fill="#FAF7F2"/>
+    <text x="50" y="96" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Arial Black,sans-serif" font-weight="900" font-size="14" fill="#fff" letter-spacing="3">CF</text>
+  </symbol>
+</svg>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="logo-mark"><use href="#mark"/></svg>
+    <span class="wm-text">CHARACTER <span>First</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html" class="active">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="contact.html" class="nav-cta">Neem contact op</a>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow" style="color:#F05A28">Ons aanbod</div>
+  <h1>Kies wat past<br>bij jouw context.</h1>
+  <p>Character First werkt op drie niveaus: het team, de coach en de individuele speler. Elk traject is op maat — geen kant-en-klaar pakket.</p>
+</div>
+
+<div class="services">
+
+  <div class="service-card">
+    <div class="sc-left">
+      <div class="sc-icon">🏆</div>
+      <span class="sc-tag">Team</span>
+      <div class="sc-title">Teambegeleiding</div>
+    </div>
+    <div class="sc-right">
+      <p>Een begeleiding op maat voor het volledige team. Kies voor een intensief traject doorheen het seizoen of een krachtige eenmalige preseason-sessie. We werken aan teamdynamiek, communicatie, rolverdeling en mentale weerbaarheid — via ervaringsgericht leren, niet via theorielessen.</p>
+      <ul class="feature-list">
+        <li>Doorheen het seizoen: vaste momenten, opbouwend traject</li>
+        <li>Preseason: intensieve kickstart voor het nieuwe seizoen</li>
+        <li>Aangepast aan sport, leeftijd en teamsamenstelling</li>
+        <li>Beschikbaar voor U14 tot U21</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="service-card">
+    <div class="sc-left">
+      <div class="sc-icon">🎯</div>
+      <span class="sc-tag">Coach</span>
+      <div class="sc-title">Individuele begeleiding voor coaches</div>
+    </div>
+    <div class="sc-right">
+      <p>Coaches zijn de sleutelfiguur in karakterontwikkeling. Toch krijgen ze zelden de tools om dat bewust te doen. Deze begeleiding geeft jou als coach een persoonlijk kader: hoe breng je karaktercoaching in de praktijk, hoe ga je om met moeilijke momenten, hoe spreek je spelers aan op hun gedrag?</p>
+      <ul class="feature-list">
+        <li>1-op-1 gesprekken op jouw tempo</li>
+        <li>Concrete tools voor op de training en wedstrijd</li>
+        <li>Inzicht in je eigen coachingstijl</li>
+        <li>Reflectiemomenten en opvolging</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="service-card">
+    <div class="sc-left">
+      <div class="sc-icon">🌱</div>
+      <span class="sc-tag">Speler</span>
+      <div class="sc-title">Mentorship voor spelers</div>
+    </div>
+    <div class="sc-right">
+      <p>Voor de jongere die meer wil dan sporten. Een mentortraject waarbij we naast sport ook werken aan zelfkennis, veerkracht, communicatie en doelgerichtheid. Niet als therapie, maar als begeleiding van een jonge mens die wil groeien.</p>
+      <ul class="feature-list">
+        <li>Individuele gesprekken voor spelers van 14+</li>
+        <li>Thema's: zelfkennis, druk, communicatie, leiderschap</li>
+        <li>In combinatie met teambegeleiding of los</li>
+        <li>In overleg met ouders en club</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="cta-strip">
+  <div>
+    <h2>Niet zeker welk traject past?</h2>
+    <p>Neem contact op en we bekijken samen wat het beste aansluit bij jouw context.</p>
+  </div>
+  <a href="contact.html" class="btn-white">Stuur een bericht</a>
+</div>
+
+<footer>
+  <span class="fl">Character <span>First</span></span>
+  <nav>
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <span>© 2026 characterfirst.be</span>
+</footer>
+</body>
+</html>
