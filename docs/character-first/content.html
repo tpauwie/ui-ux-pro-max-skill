@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Content — Character First</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .page-hero { padding: 88px 7% 48px; background: var(--mist); border-bottom: 1px solid var(--line); }
+  .page-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); margin-bottom: 12px; }
+  .page-hero p { color: var(--stone); font-size: 1rem; max-width: 520px; line-height: 1.7; }
+
+  /* THEME GRID */
+  .theme-grid { padding: 48px 7%; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; border-bottom: 1px solid var(--line); }
+  .theme-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; position: relative; }
+  .theme-card .tc-header { padding: 20px 22px 16px; }
+  .theme-card .tc-tag { display: inline-block; font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #fff; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px; }
+  .theme-card h3 { font-size: 1rem; margin-bottom: 6px; }
+  .theme-card .tc-desc { font-size: .85rem; color: var(--stone); line-height: 1.6; }
+  .theme-card .tc-footer { padding: 12px 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .theme-card .tc-footer span { font-size: .8rem; color: var(--stone); }
+  .tc-btn { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 12px; color: var(--ignite); text-decoration: none; }
+
+  /* LOCKED overlay */
+  .theme-card.locked { opacity: 1; }
+  .theme-card.locked .tc-header { filter: blur(3px); user-select: none; pointer-events: none; }
+  .theme-card.locked .tc-footer { filter: blur(3px); user-select: none; pointer-events: none; }
+  .lock-overlay {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    background: rgba(250,247,242,.7); backdrop-filter: blur(2px);
+    border-radius: 14px;
+  }
+  .lock-overlay .lock-icon { font-size: 22px; }
+  .lock-overlay p { font-size: 12px; color: var(--stone); font-weight: 500; }
+
+  /* CODE GATE */
+  .code-gate { padding: 48px 7%; background: var(--ink); }
+  .gate-inner { max-width: 480px; }
+  .code-gate .eyebrow { color: var(--ignite); }
+  .code-gate h2 { color: #fff; font-size: 1.5rem; margin-bottom: 10px; }
+  .code-gate p { color: #aab4c6; font-size: .9rem; line-height: 1.7; margin-bottom: 24px; }
+  .code-form { display: flex; gap: 10px; align-items: stretch; }
+  .code-input {
+    flex: 1; padding: 11px 16px; border: 1.5px solid rgba(255,255,255,.15);
+    border-radius: 8px; background: rgba(255,255,255,.07); color: #fff;
+    font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 16px;
+    letter-spacing: .12em; text-transform: uppercase; outline: none;
+    transition: border-color .15s;
+  }
+  .code-input::placeholder { color: rgba(255,255,255,.25); font-weight: 500; letter-spacing: .04em; text-transform: none; }
+  .code-input:focus { border-color: var(--ignite); }
+  .code-error { color: #F07070; font-size: .82rem; margin-top: 8px; display: none; }
+  .code-error.show { display: block; }
+
+  /* UNLOCKED STATE */
+  .unlocked-msg { display: none; padding: 14px 18px; background: rgba(30,138,91,.2); border: 1px solid rgba(30,138,91,.4); border-radius: 10px; color: #6fcfa0; font-size: .9rem; font-weight: 600; margin-top: 16px; }
+  .unlocked-msg.show { display: block; }
+
+  /* When unlocked, remove lock overlays */
+  body.unlocked .lock-overlay { display: none; }
+  body.unlocked .theme-card.locked .tc-header { filter: none; pointer-events: auto; }
+  body.unlocked .theme-card.locked .tc-footer { filter: none; pointer-events: auto; }
+  body.unlocked .theme-card.locked { opacity: 1; }
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="#1C2433"/>
+    <path d="M10 78 L50 14 L90 78 Z" fill="#F05A28"/>
+    <path d="M50 14 L36 38 L50 31 L64 38 Z" fill="#FAF7F2"/>
+    <text x="50" y="96" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Arial Black,sans-serif" font-weight="900" font-size="14" fill="#fff" letter-spacing="3">CF</text>
+  </symbol>
+</svg>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="logo-mark"><use href="#mark"/></svg>
+    <span class="wm-text">CHARACTER <span>First</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html" class="active">Content</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="aanbod.html" class="nav-cta">Bekijk aanbod</a>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Programma-inhoud</div>
+  <h1>De 7 thema's van<br>Character First.</h1>
+  <p>Een voorproef van de programma-inhoud. De eerste twee thema's zijn vrij te bekijken. Voor volledige toegang heb je een code nodig.</p>
+</div>
+
+<!-- THEME CARDS -->
+<div class="theme-grid" id="themeGrid">
+
+  <!-- SNEAK PEEK 1 — zichtbaar -->
+  <div class="theme-card">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#F05A28">Thema 1</span>
+      <h3>Zelfkennis</h3>
+      <p class="tc-desc">Wie ben jij als sporter en als mens? Wat zijn je sterke kanten, wat zijn je valkuilen? Zelfkennis is de basis van alle andere groei.</p>
+    </div>
+    <div class="tc-footer">
+      <span>4 oefeningen · 1 reflectiekaart</span>
+      <a href="#" class="tc-btn">Bekijk →</a>
+    </div>
+  </div>
+
+  <!-- SNEAK PEEK 2 — zichtbaar -->
+  <div class="theme-card">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#2F6FB0">Thema 2</span>
+      <h3>Druk &amp; Stress</h3>
+      <p class="tc-desc">Hoe ga je om met prestatiedruk, verwachtingen en moeilijke momenten? Tools om druk om te zetten in focus.</p>
+    </div>
+    <div class="tc-footer">
+      <span>5 oefeningen · 1 reflectiekaart</span>
+      <a href="#" class="tc-btn">Bekijk →</a>
+    </div>
+  </div>
+
+  <!-- LOCKED — thema 3 t/m 7 -->
+  <div class="theme-card locked">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#7A52C7">Thema 3</span>
+      <h3>Communicatie</h3>
+      <p class="tc-desc">Hoe spreek je teamgenoten, coaches en tegenstanders aan? Feedback geven en ontvangen.</p>
+    </div>
+    <div class="tc-footer"><span>4 oefeningen</span></div>
+    <div class="lock-overlay"><span class="lock-icon">🔒</span><p>Code vereist</p></div>
+  </div>
+
+  <div class="theme-card locked">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#C7842F">Thema 4</span>
+      <h3>Mijn Rol</h3>
+      <p class="tc-desc">Wat is jouw rol in het team? Hoe draag je bij, ook als je niet de ster bent?</p>
+    </div>
+    <div class="tc-footer"><span>3 oefeningen</span></div>
+    <div class="lock-overlay"><span class="lock-icon">🔒</span><p>Code vereist</p></div>
+  </div>
+
+  <div class="theme-card locked">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#1E8A5B">Thema 5</span>
+      <h3>Team Eerst</h3>
+      <p class="tc-desc">Van individu naar collectief. Hoe maak je de groep sterker dan de som van de delen?</p>
+    </div>
+    <div class="tc-footer"><span>5 oefeningen</span></div>
+    <div class="lock-overlay"><span class="lock-icon">🔒</span><p>Code vereist</p></div>
+  </div>
+
+  <div class="theme-card locked">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#C73F62">Thema 6</span>
+      <h3>Veerkracht</h3>
+      <p class="tc-desc">Herstellen na verlies, fouten en teleurstelling. De kracht om door te gaan.</p>
+    </div>
+    <div class="tc-footer"><span>4 oefeningen</span></div>
+    <div class="lock-overlay"><span class="lock-icon">🔒</span><p>Code vereist</p></div>
+  </div>
+
+  <div class="theme-card locked">
+    <div class="tc-header">
+      <span class="tc-tag" style="background:#1C2433">Thema 7</span>
+      <h3>Leiderschap</h3>
+      <p class="tc-desc">Leiden vanuit karakter. Voor captains, maar ook voor iedereen die invloed heeft op een groep.</p>
+    </div>
+    <div class="tc-footer"><span>6 oefeningen</span></div>
+    <div class="lock-overlay"><span class="lock-icon">🔒</span><p>Code vereist</p></div>
+  </div>
+
+</div>
+
+<!-- CODE GATE -->
+<div class="code-gate">
+  <div class="gate-inner">
+    <div class="eyebrow">Volledige toegang</div>
+    <h2>Heb je een toegangscode?</h2>
+    <p>Coaches en deelnemers ontvangen een persoonlijke code via hun begeleider of bij inschrijving. Voer de code in om alle thema's te ontgrendelen.</p>
+    <div class="code-form">
+      <input type="text" class="code-input" id="codeInput" placeholder="Vul je code in" maxlength="20" autocomplete="off"/>
+      <button class="btn-primary" onclick="checkCode()">Ontgrendel</button>
+    </div>
+    <p class="code-error" id="codeError">Ongeldige code. Neem contact op als je problemen hebt.</p>
+    <div class="unlocked-msg" id="unlockedMsg">✓ Toegang verleend — alle thema's zijn nu beschikbaar.</div>
+    <p style="color:#6f7b91;font-size:.82rem;margin-top:20px">Nog geen code? <a href="contact.html" style="color:var(--ignite)">Neem contact op</a> om deel te nemen.</p>
+  </div>
+</div>
+
+<footer>
+  <span class="fl">Character <span>First</span></span>
+  <nav>
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <span>© 2026 characterfirst.be</span>
+</footer>
+
+<script>
+  const CODE = 'CF2026';
+
+  // Persist unlock across page load
+  if (sessionStorage.getItem('cf_unlocked') === '1') unlock();
+
+  function checkCode() {
+    const val = document.getElementById('codeInput').value.trim().toUpperCase();
+    if (val === CODE) {
+      sessionStorage.setItem('cf_unlocked', '1');
+      unlock();
+    } else {
+      document.getElementById('codeError').classList.add('show');
+    }
+  }
+
+  function unlock() {
+    document.body.classList.add('unlocked');
+    document.getElementById('unlockedMsg').classList.add('show');
+    document.getElementById('codeError').classList.remove('show');
+  }
+
+  document.getElementById('codeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkCode();
+  });
+</script>
+</body>
+</html>

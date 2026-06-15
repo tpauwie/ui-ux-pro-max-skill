@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Character First — De mens achter de atleet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  /* HERO */
+  .hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 100vh; padding-top: 60px;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 56px 52px 56px 7%;
+  }
+  h1 { font-size: clamp(36px, 4.2vw, 58px); margin-bottom: 18px; }
+  h1 em { font-style: normal; color: var(--ignite); }
+  .hero-body { font-size: 16px; line-height: 1.7; color: var(--stone); max-width: 420px; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 14px; align-items: center; margin-bottom: 40px; }
+  .hero-right { position: relative; overflow: hidden; background: #1a1f2b; }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .8s ease; }
+  .hero-photo.active { opacity: 1; }
+  .hero-right::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--ignite); z-index: 2; }
+  .slide-dots { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; z-index: 10; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.35); cursor: pointer; transition: background .3s, transform .3s; }
+  .dot.active { background: var(--ignite); transform: scale(1.3); }
+
+  /* PILLARS */
+  .pillars { border-top: 1px solid var(--line); padding-top: 28px; display: flex; flex-direction: column; gap: 0; }
+  .pillar { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .pillar:last-child { border-bottom: 0; }
+  .pillar-icon { width: 32px; height: 32px; border-radius: 7px; background: #FEF0EA; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .pillar-title { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 1px; }
+  .pillar-sub { font-size: 12.5px; color: var(--stone); }
+
+  /* INTRO STRIP */
+  .intro-strip { padding: 48px 7%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; border-bottom: 1px solid var(--line); }
+  .intro-strip h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); margin-bottom: 12px; }
+  .intro-strip p { color: var(--stone); font-size: .95rem; line-height: 1.75; }
+  .values-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .val { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .val .dot-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; font-size: 13px; }
+  .val .vh { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: .88rem; margin-bottom: 3px; }
+  .val .vp { font-size: .8rem; color: var(--stone); line-height: 1.5; }
+
+  @media(max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { height: 320px; }
+    .intro-strip { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGO SVG def -->
+<svg style="display:none">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="#1C2433"/>
+    <path d="M10 78 L50 14 L90 78 Z" fill="#F05A28"/>
+    <path d="M50 14 L36 38 L50 31 L64 38 Z" fill="#FAF7F2"/>
+    <text x="50" y="96" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Arial Black,sans-serif" font-weight="900" font-size="14" fill="#fff" letter-spacing="3">CF</text>
+  </symbol>
+</svg>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg class="logo-mark"><use href="#mark"/></svg>
+    <span class="wm-text">CHARACTER <span>First</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <a href="aanbod.html" class="nav-cta">Bekijk aanbod</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="eyebrow">Karakterontwikkeling voor sporters</span>
+    <h1>De mens<br>achter de<br><em>atleet.</em></h1>
+    <p class="hero-body">Character First helpt coaches jongeren van 14+ niet alleen beter te laten sporten, maar ook sterker te laten worden als mens.</p>
+    <div class="hero-actions">
+      <a href="aanbod.html" class="btn-primary">Bekijk het aanbod</a>
+      <a href="methode.html" class="btn-ghost">De methode</a>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🏆</div>
+        <div>
+          <div class="pillar-title">Teambegeleiding</div>
+          <div class="pillar-sub">Doorheen het seizoen of éénmalig in preseason</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🎯</div>
+        <div>
+          <div class="pillar-title">Begeleiding voor coaches</div>
+          <div class="pillar-sub">Individuele ondersteuning bij karaktercoaching</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌱</div>
+        <div>
+          <div class="pillar-title">Mentorship voor spelers</div>
+          <div class="pillar-sub">1-op-1 begeleiding voor persoonlijke groei</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <img class="hero-photo active" id="s1"
+      src="https://raw.githubusercontent.com/tpauwie/ui-ux-pro-max-skill/main/ChatGPT%20Image%20Jun%2011%2C%202026%2C%2008_04_44%20AM.png"
+      alt="Coach begeleidt speler op grasveld"/>
+    <img class="hero-photo" id="s2"
+      src="https://raw.githubusercontent.com/tpauwie/ui-ux-pro-max-skill/main/ChatGPT%20Image%20Jun%2011%2C%202026%2C%2008_07_09%20AM.png"
+      alt="Coach begeleidt speler op basketbalveld"/>
+    <div class="slide-dots">
+      <div class="dot active" data-n="0"></div>
+      <div class="dot" data-n="1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <div>
+    <div class="eyebrow">Waarom Character First</div>
+    <h2>Sport vormt mensen.<br>Wij maken het bewust.</h2>
+    <p>Sport is het perfecte podium om levenswaarden te ontwikkelen. Wij geven coaches en clubs een evidence-based raamwerk om mentale weerbaarheid, teamgeest en leiderschap te trainen — naast techniek en tactiek.</p>
+  </div>
+  <div class="values-row">
+    <div class="val">
+      <div class="dot-icon" style="background:rgba(240,90,40,.12)">🔥</div>
+      <div class="vh">Moedig</div>
+      <div class="vp">We dagen uit en vermijden de comfortzone niet.</div>
+    </div>
+    <div class="val">
+      <div class="dot-icon" style="background:rgba(30,138,91,.12)">🌱</div>
+      <div class="vh">Groeigericht</div>
+      <div class="vp">Vooruitgang boven perfectie.</div>
+    </div>
+    <div class="val">
+      <div class="dot-icon" style="background:rgba(47,111,176,.12)">🎯</div>
+      <div class="vh">Onderbouwd</div>
+      <div class="vp">Geen hype, wel wetenschap.</div>
+    </div>
+    <div class="val">
+      <div class="dot-icon" style="background:rgba(28,36,51,.08)">🤝</div>
+      <div class="vh">Samen</div>
+      <div class="vp">De sterkste speler maakt het team sterker.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="fl">Character <span>First</span></span>
+  <nav>
+    <a href="methode.html">Methode</a>
+    <a href="aanbod.html">Aanbod</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <span>© 2026 characterfirst.be</span>
+</footer>
+
+<script>
+  const photos = ['s1','s2'], dots = document.querySelectorAll('.dot');
+  let cur = 0;
+  function goTo(n) {
+    photos.forEach((id,i) => document.getElementById(id).classList.toggle('active', i===n));
+    dots.forEach((d,i) => d.classList.toggle('active', i===n));
+    cur = n;
+  }
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.n)));
+  setInterval(() => goTo((cur+1) % photos.length), 4500);
+</script>
+</body>
+</html>
